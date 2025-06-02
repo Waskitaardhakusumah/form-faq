@@ -111,6 +111,26 @@
                 >Isi Form</a
               >
             </div>
+            <!-- Tambahkan form di bawah tombol Isi Form -->
+            <div id="dynamicForm" class="mt-3 d-none">
+              <form id="reportForm">
+                <div class="mb-3">
+                  <label for="name" class="form-label">Nama</label>
+                  <input type="text" id="name" class="form-control" placeholder="Masukkan nama Anda" required />
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" id="email" class="form-control" placeholder="Masukkan email Anda" required />
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="form-label">Deskripsi Kendala</label>
+                  <textarea id="description" class="form-control" rows="4" placeholder="Jelaskan kendala Anda" required></textarea>
+                </div>
+                <div class="text-end">
+                  <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+              </form>
+            </div>
           </form>
         </div>
       </div>
@@ -604,6 +624,13 @@
           '<tr><td colspan="3" class="text-center small">Tidak ada hasil.</td></tr>';
 
         paginationControls.innerHTML = "";
+      });
+
+      // Tambahkan event listener untuk tombol "Isi Form"
+      document.querySelector("#googleFormLink .btn").addEventListener("click", (e) => {
+        e.preventDefault(); // Mencegah navigasi ke halaman lain
+        const dynamicForm = document.getElementById("dynamicForm");
+        dynamicForm.classList.toggle("d-none"); // Tampilkan atau sembunyikan form
       });
     </script>
   </body>
