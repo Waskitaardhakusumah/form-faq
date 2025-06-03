@@ -111,7 +111,11 @@
                 >Isi Form</a
               >
             </div>
-         
+          </form>
+        </div>
+      </div>
+    </div>
+
     <!-- Search Modal -->
     <div
       class="modal fade"
@@ -600,13 +604,6 @@
           '<tr><td colspan="3" class="text-center small">Tidak ada hasil.</td></tr>';
 
         paginationControls.innerHTML = "";
-      });
-
-      // Tambahkan event listener untuk tombol "Isi Form"
-      document.querySelector("#googleFormLink .btn").addEventListener("click", (e) => {
-        e.preventDefault(); // Mencegah navigasi ke halaman lain
-        const dynamicForm = document.getElementById("dynamicForm");
-        dynamicForm.classList.toggle("d-none"); // Tampilkan atau sembunyikan form
       });
     </script>
   </body>
