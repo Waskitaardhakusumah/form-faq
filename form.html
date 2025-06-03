@@ -416,10 +416,24 @@
             if (valid) {
               // window.location.href = googleFormLink;
               // Konfirmasi pengiriman
+              if (valid) {
               const form = document.getElementById("faqForm");
-              form.action = googleFormLink;
-              form.method = "POST";
-              form.submit();
+              const formData = new FormData(form);
+            
+              fetch(googleFormLink, {
+                method: "POST",
+                body: formData,
+                mode: "no-cors"
+              })
+                .then(() => {
+                  Swal.fire("Berhasil!", "Formulir berhasil dikirim.", "success");
+                  form.reset();
+                })
+                .catch((error) => {
+                  Swal.fire("Gagal!", "Pengiriman formulir gagal.", "error");
+                  console.error("Error:", error);
+                });
+            }
 
               // Menunggu hingga pengiriman selesai
               setTimeout(function () {
