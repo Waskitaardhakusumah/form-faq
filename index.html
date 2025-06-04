@@ -112,24 +112,104 @@
               >
             </div>
             <!-- Tambahkan form di bawah tombol Isi Form -->
-            <div id="dynamicForm" class="mt-3 d-none">
-              <form id="reportForm">
-                <div class="mb-3">
-                  <label for="name" class="form-label">Nama</label>
-                  <input type="text" id="name" class="form-control" placeholder="Masukkan nama Anda" required />
-                </div>
-                <div class="mb-3">
-                  <label for="email" class="form-label">Email</label>
-                  <input type="email" id="email" class="form-control" placeholder="Masukkan email Anda" required />
-                </div>
-                <div class="mb-3">
-                  <label for="description" class="form-label">Deskripsi Kendala</label>
-                  <textarea id="description" class="form-control" rows="4" placeholder="Jelaskan kendala Anda" required></textarea>
-                </div>
-                <div class="text-end">
-                  <button type="submit" class="btn btn-primary">Kirim</button>
-                </div>
-              </form>
+          <div id="dynamicForm" class="mt-3 d-none">
+  <form id="faqForm" method="POST" novalidate>
+    <div class="row mb-2">
+      <div class="col-md-6">
+        <label for="brand" class="form-label small text-muted">Brand</label>
+        <select id="brand" class="form-select form-select-sm" required>
+          <option value="">-- Pilih Brand --</option>
+          <option value="nb">Reguler</option>
+          <option value="mas">MasKu</option>
+          <option value="mtr">MotorKu</option>
+          <option value="mbl">MobilKu</option>
+        </select>
+        <div class="invalid-feedback">Brand harus dipilih!</div>
+      </div>
+      <div class="col-md-6">
+        <label for="errorSystem" class="form-label small text-muted">Error Sistem</label>
+        <select id="errorSystem" name="entry.900671353" class="form-select form-select-sm">
+          <option value="">-- Pilih Error Sistem --</option>
+          <option value="ki">KI</option>
+          <option value="mss">MSS</option>
+          <option value="wise">WISE</option>
+          <option value="login">Login</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-md-6">
+        <label for="region" class="form-label small text-muted">Region</label>
+        <select id="region" name="entry.453750574" class="form-select form-select-sm">
+          <option value="">-- Pilih Region --</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="cabang" class="form-label small text-muted">Cabang</label>
+        <select id="cabang" name="entry.27483305" class="form-select form-select-sm">
+          <option value="">-- Pilih Cabang --</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-md-6">
+        <label for="NCust" class="form-label small text-muted">Nama Cust</label>
+        <input type="text" id="NCust" name="entry.349701399" class="form-control form-control-sm" />
+      </div>
+      <div class="col-md-6">
+        <label for="IdCust" class="form-label small text-muted">Cust ID</label>
+        <input type="text" id="IdCust" name="entry.1285711467" class="form-control form-control-sm" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-md-6">
+        <label for="pic" class="form-label small text-muted">PIC Input</label>
+        <input type="text" id="pic" name="entry.1383050238" class="form-control form-control-sm" required />
+        <div class="invalid-feedback">PIC harus diisi!</div>
+      </div>
+      <div class="col-md-6">
+        <label for="NoKwn" class="form-label small text-muted">No Kawan Internal</label>
+        <input type="text" id="NoKwn" name="entry.1372652565" class="form-control form-control-sm" required />
+        <div class="invalid-feedback">No Kawan harus diisi!</div>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-md-6">
+        <label for="IdPolo" class="form-label small text-muted">Task ID Polo</label>
+        <input type="text" id="IdPolo" name="entry.163739172" class="form-control form-control-sm" />
+        <div class="invalid-feedback">Task ID Polo harus diisi!</div>
+      </div>
+      <div class="col-md-6">
+        <label for="NoApp" class="form-label small text-muted">No APP</label>
+        <input type="text" id="NoApp" name="entry.66506618" class="form-control form-control-sm" />
+        <div class="invalid-feedback">No APP harus diisi!</div>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-md-12">
+        <label for="NoOdrn" class="form-label small text-muted">No Odrn</label>
+        <input type="text" id="NoOdrn" name="entry.996527903" class="form-control form-control-sm" />
+        <div class="invalid-feedback">No Odrn harus diisi!</div>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <label for="issue" class="form-label small text-muted">Issue</label>
+      <textarea id="issue" name="entry.902491819" class="form-control form-control-sm" rows="5" required></textarea>
+      <div class="invalid-feedback">Issue harus diisi!</div>
+    </div>
+
+    <div class="mb-2">
+      <button type="submit" id="submitButton" class="btn btn-primary btn-sm">Submit</button>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.reload()">Cancel</button>
+    </div>
+  </form>
+</div>
             </div>
           </form>
         </div>
