@@ -103,51 +103,140 @@
             </div>
             <div id="googleFormLink" class="mt-3 d-none">
               <p>Silakan isi Form untuk melaporkan kendala Anda:</p>
-              <a href="#" class="btn btn-primary" id="toggleDynamicForm"
+              <a href="#" class="btn btn-primary" id="toggleReportForm"
                 >Isi Form</a
               >
             </div>
-            <div id="formHtmlContainer" class="mt-4"></div>
-              <button id="showFormHtmlBtn" type="button" class="btn btn-info mt-2">
-            <div id="dynamicForm" class="mt-3 d-none">
+            <div id="reportFormContainer" class="mt-4 d-none">
+              <h4 class="mb-3 text-center">Form FAQ - WOM Finance</h4>
               <form id="reportForm">
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="brand" class="form-label">Brand</label>
+                    <select id="brand" class="form-select" name="entry.brand" required>
+                      <option value="">-- Pilih Brand --</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="errorSistem" class="form-label">Error Sistem</label>
+                    <select id="errorSistem" class="form-select" name="entry.errorSistem" required>
+                      <option value="">-- Pilih Error Sistem --</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="region" class="form-label">Region</label>
+                    <select id="region" class="form-select" name="entry.region" required>
+                      <option value="">-- Pilih Region --</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="cabang" class="form-label">Cabang</label>
+                    <select id="cabang" class="form-select" name="entry.cabang" required>
+                      <option value="">-- Pilih Cabang --</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="namaCust" class="form-label">Nama Cust</label>
+                    <input
+                      type="text"
+                      id="namaCust"
+                      class="form-control"
+                      name="entry.namaCust"
+                      placeholder="Masukkan Nama Customer"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="custID" class="form-label">Cust ID</label>
+                    <input
+                      type="text"
+                      id="custID"
+                      class="form-control"
+                      name="entry.custID"
+                      placeholder="Masukkan Cust ID"
+                    />
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="picInput" class="form-label">PIC Input</label>
+                    <input
+                      type="text"
+                      id="picInput"
+                      class="form-control"
+                      name="entry.picInput"
+                      placeholder="Masukkan Nama PIC"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="noKawianInternal" class="form-label">No Kawian Internal</label>
+                    <input
+                      type="text"
+                      id="noKawianInternal"
+                      class="form-control"
+                      name="entry.noKawianInternal"
+                      placeholder="Masukkan No Kawian Internal"
+                    />
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="taskIDPolo" class="form-label">Task ID Polo</label>
+                    <input
+                      type="text"
+                      id="taskIDPolo"
+                      class="form-control"
+                      name="entry.taskIDPolo"
+                      placeholder="Masukkan Task ID Polo"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="noAPP" class="form-label">No APP</label>
+                    <input
+                      type="text"
+                      id="noAPP"
+                      class="form-control"
+                      name="entry.noAPP"
+                      placeholder="Masukkan No APP"
+                    />
+                  </div>
+                </div>
+
                 <div class="mb-3">
-                  <label for="name" class="form-label">Nama</label>
+                  <label for="noOdm" class="form-label">No Odm</label>
                   <input
                     type="text"
-                    id="name"
-                    name="entry.nama"
+                    id="noOdm"
                     class="form-control"
-                    placeholder="Masukkan nama Anda"
-                    required
+                    name="entry.noOdm"
+                    placeholder="Masukkan No Odm"
                   />
                 </div>
+
                 <div class="mb-3">
-                  <label for="email" class="form-label">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="entry.email"
-                    class="form-control"
-                    placeholder="Masukkan email Anda"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="description" class="form-label"
-                    >Deskripsi Kendala</label
-                  >
+                  <label for="issue" class="form-label">Issue</label>
                   <textarea
-                    id="description"
-                    name="entry.deskripsi"
+                    id="issue"
                     class="form-control"
                     rows="4"
-                    placeholder="Jelaskan kendala Anda"
+                    name="entry.issue"
+                    placeholder="Jelaskan masalahnya secara detail"
                     required
                   ></textarea>
                 </div>
-                <div class="text-end">
-                  <button type="submit" class="btn btn-primary">Kirim</button>
+
+                <div class="d-flex justify-content-end">
+                  <button type="button" class="btn btn-secondary me-2" id="cancelReportForm">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
               </form>
             </div>
@@ -284,39 +373,10 @@
         </div>
       </div>
     </div>
-<script>
-  const showFormHtmlBtn = document.getElementById("showFormHtmlBtn");
-  const formHtmlContainer = document.getElementById("formHtmlContainer");
 
-  let isFormHtmlLoaded = false;
-
-  showFormHtmlBtn.addEventListener("click", function() {
-    if (!isFormHtmlLoaded) {
-      // Ambil isi form.html dan tampilkan
-      fetch("form.html")
-        .then(response => {
-          if (!response.ok) throw new Error("Gagal memuat form.html");
-          return response.text();
-        })
-        .then(html => {
-          formHtmlContainer.innerHTML = html;
-          isFormHtmlLoaded = true;
-          showFormHtmlBtn.textContent = "Sembunyikan Form Tambahan";
-        })
-        .catch(err => {
-          formHtmlContainer.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
-        });
-    } else {
-      // Sembunyikan form.html
-      formHtmlContainer.innerHTML = "";
-      isFormHtmlLoaded = false;
-      showFormHtmlBtn.textContent = "Tampilkan Form Tambahan";
-    }
-  });
-</script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhyGkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.all.min.js"></script>
@@ -331,12 +391,63 @@
       const solusiTextarea = document.getElementById("solusi");
       const doneBtn = document.getElementById("doneBtn");
       const notDoneBtn = document.getElementById("notDoneBtn");
-      const googleFormLinkDiv = document.getElementById("googleFormLink"); // Ubah nama variabel agar tidak ambigu
+      const googleFormLinkDiv = document.getElementById("googleFormLink");
       const searchResults = document.getElementById("searchResults");
       const paginationControls = document.getElementById("paginationControls");
-      const toggleDynamicFormBtn = document.getElementById("toggleDynamicForm"); // Tombol "Isi Form"
-      const dynamicFormDiv = document.getElementById("dynamicForm"); // Div yang berisi form dinamis
-      const reportForm = document.getElementById("reportForm"); // Form dinamis
+
+      // Elements for the new report form
+      const toggleReportFormBtn = document.getElementById("toggleReportForm");
+      const reportFormContainer = document.getElementById("reportFormContainer");
+      const reportForm = document.getElementById("reportForm");
+      const cancelReportFormBtn = document.getElementById("cancelReportForm");
+
+      // Dropdown elements for the report form
+      const brandSelect = document.getElementById("brand");
+      const errorSistemSelect = document.getElementById("errorSistem");
+      const regionSelect = document.getElementById("region");
+      const cabangSelect = document.getElementById("cabang");
+
+      // Dummy data for the report form dropdowns (replace with actual data/API calls if needed)
+      const reportFormDropdownData = {
+        brands: ["WOM Motor", "WOM Mobil", "WOM Property"],
+        errorSistems: ["Input Error", "System Down", "Data Mismatch", "Lain-lain"],
+        regions: ["Jawa Barat", "Jawa Tengah", "Jawa Timur", "Sumatera", "Kalimantan"],
+        cabangs: {
+          "Jawa Barat": ["Bandung", "Cirebon", "Bogor"],
+          "Jawa Tengah": ["Semarang", "Solo", "Yogyakarta"],
+          "Jawa Timur": ["Surabaya", "Malang", "Kediri"],
+          "Sumatera": ["Medan", "Palembang", "Padang"],
+          "Kalimantan": ["Pontianak", "Banjarmasin", "Samarinda"],
+        },
+      };
+
+      // Functions to populate the report form dropdowns
+      function populateReportDropdown(selectElement, values, defaultText = "-- Pilih --") {
+        selectElement.innerHTML = `<option value="">${defaultText}</option>`;
+        values.forEach((value) => {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = value;
+          selectElement.appendChild(option);
+        });
+      }
+
+      function initializeReportFormDropdowns() {
+        populateReportDropdown(brandSelect, reportFormDropdownData.brands, "-- Pilih Brand --");
+        populateReportDropdown(errorSistemSelect, reportFormDropdownData.errorSistems, "-- Pilih Error Sistem --");
+        populateReportDropdown(regionSelect, reportFormDropdownData.regions, "-- Pilih Region --");
+
+        regionSelect.addEventListener("change", () => {
+          const selectedRegion = regionSelect.value;
+          const cabangs = reportFormDropdownData.cabangs[selectedRegion] || [];
+          populateReportDropdown(cabangSelect, cabangs, "-- Pilih Cabang --");
+          cabangSelect.disabled = !selectedRegion; // Disable cabang if no region selected
+        });
+
+        // Initially disable cabang select
+        cabangSelect.disabled = true;
+      }
+
 
       // Fungsi untuk menampilkan indikator loading
       function showLoading(message = "Loading...") {
@@ -362,6 +473,7 @@
         .then((data) => {
           faqData = data;
           initializeDropdowns();
+          initializeReportFormDropdowns(); // Initialize report form dropdowns
         })
         .catch((error) => {
           console.error("Error loading JSON data:", error);
@@ -372,7 +484,7 @@
           );
         });
 
-      // Initialize Dropdowns
+      // Initialize Dropdowns for main FAQ section
       function initializeDropdowns() {
         populateDropdown(sistemSelect, getUniqueValues("Sistem"));
         sistemSelect.addEventListener("change", handleSistemChange);
@@ -400,7 +512,6 @@
       // Handle Sistem Change
       function handleSistemChange() {
         if (!sistemSelect.value) {
-          // Reset semua dropdown dan textarea jika Sistem tidak dipilih
           populateDropdown(featureSelect, [], "-- Pilih Feature --");
           populateDropdown(kendalaSelect, [], "-- Pilih Kendala --");
           solusiTextarea.value = "";
@@ -408,12 +519,11 @@
           kendalaSelect.disabled = true;
           doneBtn.disabled = true;
           notDoneBtn.disabled = true;
-          googleFormLinkDiv.classList.add("d-none"); // Sembunyikan link form
-          dynamicFormDiv.classList.add("d-none"); // Sembunyikan form dinamis
+          googleFormLinkDiv.classList.add("d-none");
+          reportFormContainer.classList.add("d-none"); // Sembunyikan form pelaporan
           return;
         }
 
-        // Populate dropdown Feature jika Sistem dipilih
         featureSelect.disabled = false;
         const filteredFeatures = [
           ...new Set(
@@ -424,31 +534,28 @@
         ];
         populateDropdown(featureSelect, filteredFeatures, "-- Pilih Feature --");
 
-        // Reset Kendala dan Solusi
         populateDropdown(kendalaSelect, [], "-- Pilih Kendala --");
         kendalaSelect.disabled = true;
         solusiTextarea.value = "";
         doneBtn.disabled = true;
         notDoneBtn.disabled = true;
-        googleFormLinkDiv.classList.add("d-none"); // Sembunyikan link form
-        dynamicFormDiv.classList.add("d-none"); // Sembunyikan form dinamis
+        googleFormLinkDiv.classList.add("d-none");
+        reportFormContainer.classList.add("d-none"); // Sembunyikan form pelaporan
       }
 
       // Handle Feature Change
       function handleFeatureChange() {
         if (!featureSelect.value) {
-          // Reset dropdown Kendala dan Solusi jika Feature tidak dipilih
           populateDropdown(kendalaSelect, [], "-- Pilih Kendala --");
           solusiTextarea.value = "";
           kendalaSelect.disabled = true;
           doneBtn.disabled = true;
           notDoneBtn.disabled = true;
-          googleFormLinkDiv.classList.add("d-none"); // Sembunyikan link form
-          dynamicFormDiv.classList.add("d-none"); // Sembunyikan form dinamis
+          googleFormLinkDiv.classList.add("d-none");
+          reportFormContainer.classList.add("d-none"); // Sembunyikan form pelaporan
           return;
         }
 
-        // Populate dropdown Kendala jika Feature dipilih
         kendalaSelect.disabled = false;
         const filteredKendala = [
           ...new Set(
@@ -463,27 +570,24 @@
         ];
         populateDropdown(kendalaSelect, filteredKendala, "-- Pilih Kendala --");
 
-        // Reset Solusi
         solusiTextarea.value = "";
         doneBtn.disabled = true;
         notDoneBtn.disabled = true;
-        googleFormLinkDiv.classList.add("d-none"); // Sembunyikan link form
-        dynamicFormDiv.classList.add("d-none"); // Sembunyikan form dinamis
+        googleFormLinkDiv.classList.add("d-none");
+        reportFormContainer.classList.add("d-none"); // Sembunyikan form pelaporan
       }
 
       // Handle Kendala Change
       function handleKendalaChange() {
         if (!kendalaSelect.value) {
-          // Reset Solusi jika Kendala tidak dipilih
           solusiTextarea.value = "";
           doneBtn.disabled = true;
           notDoneBtn.disabled = true;
-          googleFormLinkDiv.classList.add("d-none"); // Sembunyikan link form
-          dynamicFormDiv.classList.add("d-none"); // Sembunyikan form dinamis
+          googleFormLinkDiv.classList.add("d-none");
+          reportFormContainer.classList.add("d-none"); // Sembunyikan form pelaporan
           return;
         }
 
-        // Populate Solusi jika Kendala dipilih
         const solusi = faqData.find(
           (item) =>
             item.Sistem === sistemSelect.value &&
@@ -494,14 +598,14 @@
         solusiTextarea.value = solusi || "";
         doneBtn.disabled = !solusi;
         notDoneBtn.disabled = !solusi;
-        googleFormLinkDiv.classList.add("d-none"); // Sembunyikan link form
-        dynamicFormDiv.classList.add("d-none"); // Sembunyikan form dinamis
+        googleFormLinkDiv.classList.add("d-none");
+        reportFormContainer.classList.add("d-none"); // Sembunyikan form pelaporan
       }
 
       // Handle Done Button
       doneBtn.addEventListener("click", () => {
         googleFormLinkDiv.classList.add("d-none");
-        dynamicFormDiv.classList.add("d-none"); // Pastikan form dinamis disembunyikan
+        reportFormContainer.classList.add("d-none");
         Swal.fire({
           icon: "success",
           title: "Berhasil",
@@ -541,7 +645,6 @@
         <td class="text-wrap small text-muted" style="max-width: 150px; cursor: pointer;" data-column="Kendala">${item.Kendala}</td>
       `;
 
-          // Add click event for modal
           row.querySelectorAll("td").forEach((cell) => {
             cell.addEventListener("click", () =>
               showSolutionModal(item.Solusi)
@@ -557,7 +660,6 @@
         const totalPages = Math.ceil(results.length / rowsPerPage);
         paginationControls.innerHTML = "";
 
-        // Previous Button
         const prevButton = document.createElement("li");
         prevButton.className = `page-item ${
           currentPage === 1 ? "disabled" : ""
@@ -572,7 +674,6 @@
         });
         paginationControls.appendChild(prevButton);
 
-        // Page Numbers
         for (let i = 1; i <= totalPages; i++) {
           const pageItem = document.createElement("li");
           pageItem.className = `page-item ${i === currentPage ? "active" : ""}`;
@@ -585,7 +686,6 @@
           paginationControls.appendChild(pageItem);
         }
 
-        // Next Button
         const nextButton = document.createElement("li");
         nextButton.className = `page-item ${
           currentPage === totalPages ? "disabled" : ""
@@ -653,8 +753,8 @@
           );
         });
 
-        hideLoading(1500); // Tambahkan durasi tambahan
-        currentPage = 1; // Reset to first page for new search
+        hideLoading(1500);
+        currentPage = 1;
         updatePagination(results);
       });
 
@@ -669,7 +769,7 @@
           '<tr><td colspan="3" class="text-center small">Tidak ada hasil.</td></tr>';
 
         paginationControls.innerHTML = "";
-        hideLoading(1000); // Tambahkan durasi tambahan
+        hideLoading(1000);
       });
 
       // Handle Close Button (modal search)
@@ -684,27 +784,43 @@
         paginationControls.innerHTML = "";
       });
 
-      // --- Perubahan untuk Form Pelaporan Kendala Dinamis ---
+      // --- New event listeners for the detailed report form ---
 
-      // Event listener untuk tombol "Isi Form"
-      toggleDynamicFormBtn.addEventListener("click", (e) => {
-        e.preventDefault(); // Mencegah navigasi default jika href="#"
-        dynamicFormDiv.classList.toggle("d-none"); // Tampilkan atau sembunyikan form
+      // Event listener for the "Isi Form" button (toggleReportForm)
+      toggleReportFormBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        reportFormContainer.classList.toggle("d-none");
+        if (!reportFormContainer.classList.contains("d-none")) {
+            // If the form is shown, ensure dropdowns are initialized
+            initializeReportFormDropdowns();
+        }
       });
 
-      // Event listener untuk pengiriman form pelaporan kendala
+      // Event listener for the "Cancel" button on the report form
+      cancelReportFormBtn.addEventListener("click", () => {
+        reportForm.reset(); // Reset the form fields
+        reportFormContainer.classList.add("d-none"); // Hide the form
+        // Optional: clear validation states
+        Array.from(reportForm.elements).forEach((element) => {
+            element.classList.remove("is-invalid");
+        });
+        // Reset dropdowns for the report form
+        initializeReportFormDropdowns();
+      });
+
+      // Event listener for the submission of the detailed report form
       reportForm.addEventListener("submit", function (e) {
-        e.preventDefault(); // Mencegah reload halaman
+        e.preventDefault();
 
         const form = e.target;
         let isValid = true;
 
-        // Reset validasi Bootstrap
+        // Reset Bootstrap validation states
         Array.from(form.elements).forEach((element) => {
           element.classList.remove("is-invalid");
         });
 
-        // Validasi field yang required
+        // Validate required fields
         Array.from(form.elements).forEach((element) => {
           if (element.hasAttribute("required") && !element.value.trim()) {
             element.classList.add("is-invalid");
@@ -715,7 +831,7 @@
         if (!isValid) {
           Swal.fire(
             "Error",
-            "Harap lengkapi semua field yang wajib diisi pada form pelaporan kendala!",
+            "Harap lengkapi semua field yang wajib diisi pada form laporan kendala!",
             "error"
           );
           return;
@@ -723,46 +839,39 @@
 
         showLoading("Mengirim laporan...");
 
-        // Anda perlu mengganti URL Google Form di bawah ini dengan URL "form response" yang sebenarnya
-        // dari Google Form yang Anda siapkan untuk laporan kendala.
-        // Contoh: https://docs.google.com/forms/d/e/1FAIpQLSc_EXAMPLE_FORM_ID/formResponse
-        const googleFormReportLink = "YOUR_GOOGLE_FORM_REPORT_LINK_HERE"; // Ganti ini!
+        // Replace with your actual Google Form's formResponse URL for this new form
+        const googleFormReportLink = "YOUR_NEW_GOOGLE_FORM_REPORT_LINK_HERE"; // <<<--- GANTI INI!
 
         const formData = new FormData(form);
         const params = new URLSearchParams();
 
-        // Ambil data kendala yang sedang dipilih
-        const selectedSistem = sistemSelect.value;
-        const selectedFeature = featureSelect.value;
-        const selectedKendala = kendalaSelect.value;
-        const selectedSolusi = solusiTextarea.value;
+        // Append all form fields with their respective Google Forms entry IDs
+        // You MUST find these entry IDs from your Google Form (Preview -> Inspect element on input fields -> look for 'name' attribute)
+        // Example: entry.123456789 for Brand, entry.987654321 for Error Sistem, etc.
+        // I'm using dummy names like 'entry.brand', 'entry.errorSistem' here, you need to replace them.
+        params.append("entry.brand", formData.get("entry.brand"));
+        params.append("entry.errorSistem", formData.get("entry.errorSistem"));
+        params.append("entry.region", formData.get("entry.region"));
+        params.append("entry.cabang", formData.get("entry.cabang"));
+        params.append("entry.namaCust", formData.get("entry.namaCust"));
+        params.append("entry.custID", formData.get("entry.custID"));
+        params.append("entry.picInput", formData.get("entry.picInput"));
+        params.append("entry.noKawianInternal", formData.get("entry.noKawianInternal"));
+        params.append("entry.taskIDPolo", formData.get("entry.taskIDPolo"));
+        params.append("entry.noAPP", formData.get("entry.noAPP"));
+        params.append("entry.noOdm", formData.get("entry.noOdm"));
+        params.append("entry.issue", formData.get("entry.issue"));
 
-        // Tambahkan data dari dropdown FAQ ke formData
-        // Pastikan nama `entry.XXXXXXX` sesuai dengan nama field di Google Form Anda
-        // Anda perlu mendapatkan `entry.XXXXXXX` untuk setiap field di Google Form Anda (Sistem, Feature, Kendala, Solusi).
-        // Caranya: buka Google Form Anda, klik "Pratinjau" (ikon mata), isi satu entri dummy,
-        // lalu klik "Kirim". Di halaman "Terima Kasih", lihat URL-nya. Di sana akan ada `entry.XXXXXXX`
-        // untuk setiap field.
-        // Contoh:
-        // entry.123456789 (untuk Sistem)
-        // entry.987654321 (untuk Feature)
-        // entry.112233445 (untuk Kendala)
-        // entry.556677889 (untuk Solusi)
-
-        params.append("entry.nama", formData.get("entry.nama")); // Contoh field nama, sesuaikan `entry.nama`
-        params.append("entry.email", formData.get("entry.email")); // Contoh field email, sesuaikan `entry.email`
-        params.append("entry.deskripsi", formData.get("entry.deskripsi")); // Contoh field deskripsi, sesuaikan `entry.deskripsi`
-
-        // Menambahkan data dari dropdown FAQ yang relevan
-        params.append("entry.SistemFAQ", selectedSistem); // Contoh, sesuaikan `entry.SistemFAQ`
-        params.append("entry.FeatureFAQ", selectedFeature); // Contoh, sesuaikan `entry.FeatureFAQ`
-        params.append("entry.KendalaFAQ", selectedKendala); // Contoh, sesuaikan `entry.KendalaFAQ`
-        params.append("entry.SolusiFAQ", selectedSolusi); // Contoh, sesuaikan `entry.SolusiFAQ`
+        // Optionally, append selected FAQ details if relevant to this report form
+        params.append("entry.faqSistem", sistemSelect.value); // Example: entry.faqSistem, replace with actual ID
+        params.append("entry.faqFeature", featureSelect.value); // Example: entry.faqFeature, replace with actual ID
+        params.append("entry.faqKendala", kendalaSelect.value); // Example: entry.faqKendala, replace with actual ID
+        params.append("entry.faqSolusi", solusiTextarea.value); // Example: entry.faqSolusi, replace with actual ID
 
 
         fetch(googleFormReportLink, {
           method: "POST",
-          mode: "no-cors",
+          mode: "no-cors", // Important for cross-origin Google Form submission
           body: params,
         })
           .then(() => {
@@ -772,11 +881,14 @@
               "Laporan kendala Anda telah berhasil dikirim.",
               "success"
             ).then(() => {
-              form.reset(); // Reset form pelaporan kendala
-              dynamicFormDiv.classList.add("d-none"); // Sembunyikan form kembali
-              // Optional: reset main FAQ dropdowns if desired
-              sistemSelect.value = "";
-              handleSistemChange(); // Reset semua dropdown utama
+              form.reset(); // Reset the report form
+              reportFormContainer.classList.add("d-none"); // Hide the report form
+              // Reset dropdowns for the report form after submission
+              initializeReportFormDropdowns();
+
+              // Optional: reset main FAQ dropdowns if desired after report submission
+              // sistemSelect.value = "";
+              // handleSistemChange();
             });
           })
           .catch((error) => {
