@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Form FAQ - WOM Finance</title>
     <link rel="icon" href="wom-finance.jpg" type="image/png" />
-    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-    <!-- SweetAlert CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.min.css"
       rel="stylesheet"
@@ -27,7 +25,6 @@
         </div>
         <div class="card-body">
           <form id="faqForm" method="POST" novalidate>
-            <!-- Brand and Error Sistem -->
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="brand" class="form-label small text-muted"
@@ -60,9 +57,8 @@
               </div>
             </div>
 
-            <!-- Region and Cabang -->
             <div class="row mb-2">
-              <div class="col-md-6">
+              <div class="col-">
                 <label for="region" class="form-label small text-muted"
                   >Region</label
                 >
@@ -72,8 +68,7 @@
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Region --</option>
-                  <!-- Region options will be added dynamically -->
-                </select>
+                  </select>
               </div>
               <div class="col-md-6">
                 <label for="cabang" class="form-label small text-muted"
@@ -85,12 +80,10 @@
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Cabang --</option>
-                  <!-- Cabang options will be added dynamically -->
-                </select>
+                  </select>
               </div>
             </div>
 
-            <!-- Nama Cust and Cust ID -->
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="NCust" class="form-label small text-muted"
@@ -116,7 +109,6 @@
               </div>
             </div>
 
-            <!-- PIC Input and No Kawan -->
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="pic" class="form-label small text-muted"
@@ -146,7 +138,6 @@
               </div>
             </div>
 
-            <!-- Task ID Polo and No App -->
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="IdPolo" class="form-label small text-muted"
@@ -174,9 +165,8 @@
               </div>
             </div>
 
-            <!-- No Odrn -->
             <div class="row mb-2">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <label for="NoOdrn" class="form-label small text-muted"
                   >No Odrn</label
                 >
@@ -190,7 +180,6 @@
               </div>
             </div>
 
-            <!-- Issue -->
             <div class="mb-2">
               <label for="issue" class="form-label small text-muted"
                 >Issue</label
@@ -205,7 +194,40 @@
               <div class="invalid-feedback">Issue harus diisi!</div>
             </div>
 
-            <!-- Buttons -->
+            <div class="mb-2">
+              <label for="photoUpload" class="form-label small text-muted"
+                >Unggah Foto (Opsional)</label
+              >
+              <input
+                type="file"
+                id="photoUpload"
+                name="entry.PHOTOUPLOAD_FIELD_ID"
+                class="form-control form-control-sm"
+                accept="image/*"
+                multiple
+              />
+              <div class="form-text small text-muted">
+                Anda dapat mengunggah beberapa foto.
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <label for="videoUpload" class="form-label small text-muted"
+                >Unggah Video (Opsional)</label
+              >
+              <input
+                type="file"
+                id="videoUpload"
+                name="entry.VIDEOUPLOAD_FIELD_ID"
+                class="form-control form-control-sm"
+                accept="video/*"
+                multiple
+              />
+              <div class="form-text small text-muted">
+                Anda dapat mengunggah beberapa video.
+              </div>
+            </div>
+
             <div class="mb-2">
               <button
                 type="submit"
@@ -227,7 +249,6 @@
       </div>
     </div>
 
-    <!-- Scripts -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -354,6 +375,10 @@
           const issue = document.getElementById("issue").value;
           const IdPolo = document.getElementById("IdPolo").value;
 
+          // **New:** Get photo and video files
+          const photoFiles = document.getElementById("photoUpload").files;
+          const videoFiles = document.getElementById("videoUpload").files;
+
           // Validasi berdasarkan error system
           let valid = true;
           let message = "";
@@ -414,28 +439,45 @@
             }
 
             if (valid) {
-              // window.location.href = googleFormLink;
-              // Konfirmasi pengiriman
-              const form = document.getElementById("faqForm");
-              form.action = googleFormLink;
-              form.method = "POST";
-              form.submit();
+              // Create a new FormData object to send files
+              const formData = new FormData(this); // 'this' refers to the form element
 
-              // Menunggu hingga pengiriman selesai
-              setTimeout(function () {
-                // Simulasi pengiriman sukses atau gagal
-                const success = true; // Setel ke false untuk gagal
+              // **Important:** Append the files to the FormData object
+              for (let i = 0; i < photoFiles.length; i++) {
+                formData.append("entry.PHOTOUPLOAD_FIELD_ID", photoFiles[i]); // Use the correct Google Form entry ID
+              }
+              for (let i = 0; i < videoFiles.length; i++) {
+                formData.append("entry.VIDEOUPLOAD_FIELD_ID", videoFiles[i]); // Use the correct Google Form entry ID
+              }
 
-                if (success) {
+              // Send the form data using fetch API
+              fetch(googleFormLink, {
+                method: "POST",
+                body: formData,
+                mode: "no-cors", // Required for submitting to Google Forms directly
+              })
+                .then(() => {
                   Swal.fire(
                     "Berhasil!",
                     "Formulir berhasil dikirim.",
                     "success"
+                  ).then(() => {
+                    // Optional: Reset form after successful submission
+                    document.getElementById("faqForm").reset();
+                    // Optional: Reload region data if needed
+                    loadRegionData();
+                    // Clear required fields highlight
+                    updateRequiredFields("");
+                  });
+                })
+                .catch((error) => {
+                  console.error("Error submitting form:", error);
+                  Swal.fire(
+                    "Gagal!",
+                    "Pengiriman formulir gagal. Silakan coba lagi.",
+                    "error"
                   );
-                } else {
-                  Swal.fire("Gagal!", "Pengiriman formulir gagal.", "error");
-                }
-              }, 2000); // Waktu tunggu untuk simulasi
+                });
             }
           }
         });
