@@ -250,24 +250,7 @@
         </div>
       </div>
     </div>
-      // Handle Show Form Button
-      document.getElementById("googleFormLink").addEventListener("click", function (e) {
-        if (e.target && e.target.id === "showFormBtn") {
-          const formContainer = document.getElementById("formContainer");
-          // Jika sudah ada iframe, jangan tambah lagi
-          if (!formContainer.querySelector("iframe")) {
-            const iframe = document.createElement("iframe");
-            iframe.src = "form.html";
-            iframe.width = "100%";
-            iframe.style.height = "600px";
-            iframe.style.border = "1px solid #dee2e6";
-            iframe.style.background = "#fff";
-            formContainer.appendChild(iframe);
-          }
-          // Scroll ke bawah agar form terlihat (opsional)
-          formContainer.scrollIntoView({ behavior: "smooth" });
-        }
-      });
+    
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -299,7 +282,22 @@
           },
         });
       }
-
+      // Handle Show Form Button
+      document.getElementById("googleFormLink").addEventListener("click", function (e) {
+        if (e.target && e.target.id === "showFormBtn") {
+          const formContainer = document.getElementById("formContainer");
+          if (!formContainer.querySelector("iframe")) {
+            const iframe = document.createElement("iframe");
+            iframe.src = "form.html";
+            iframe.width = "100%";
+            iframe.style.height = "600px";
+            iframe.style.border = "1px solid #dee2e6";
+            iframe.style.background = "#fff";
+            formContainer.appendChild(iframe);
+          }
+          formContainer.scrollIntoView({ behavior: "smooth" });
+        }
+      });
       // Fungsi untuk menyembunyikan indikator loading dengan durasi tambahan
       function hideLoading(delay = 1000) {
         setTimeout(() => {
