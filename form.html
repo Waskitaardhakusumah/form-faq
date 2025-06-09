@@ -54,12 +54,11 @@
                   <option value="wise">WISE</option>
                   <option value="login">Login</option>
                 </select>
-                <div class="invalid-feedback">Error Sistem harus dipilih!</div>
               </div>
             </div>
 
             <div class="row mb-2">
-              <div class="col-md-6">
+              <div class="col-">
                 <label for="region" class="form-label small text-muted"
                   >Region</label
                 >
@@ -69,8 +68,7 @@
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Region --</option>
-                </select>
-                <div class="invalid-feedback">Region harus dipilih!</div>
+                  </select>
               </div>
               <div class="col-md-6">
                 <label for="cabang" class="form-label small text-muted"
@@ -82,8 +80,7 @@
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Cabang --</option>
-                </select>
-                <div class="invalid-feedback">Cabang harus dipilih!</div>
+                  </select>
               </div>
             </div>
 
@@ -98,7 +95,6 @@
                   name="entry.349701399"
                   class="form-control form-control-sm"
                 />
-                <div class="invalid-feedback">Nama Cust harus diisi!</div>
               </div>
               <div class="col-md-6">
                 <label for="IdCust" class="form-label small text-muted"
@@ -110,7 +106,6 @@
                   name="entry.1285711467"
                   class="form-control form-control-sm"
                 />
-                <div class="invalid-feedback">Cust ID harus diisi!</div>
               </div>
             </div>
 
@@ -184,40 +179,21 @@
                 <div class="invalid-feedback">No Odrn harus diisi!</div>
               </div>
               <div class="col-md-6">
-                <label for="reportDate" class="form-label small text-muted"
-                  >Tanggal Lapor</label
+                <label for="fileUpload" class="form-label small text-muted"
+                  >Upload Foto/Video</label
                 >
                 <input
-                  type="date"
-                  id="reportDate"
-                  name="entry.YOUR_GOOGLE_FORM_ENTRY_ID_FOR_REPORT_DATE"
+                  type="file"
+                  id="fileUpload"
+                  name="entry.YOUR_GOOGLE_FORM_ENTRY_ID_FOR_FILE_UPLOAD"
                   class="form-control form-control-sm"
+                  accept="image/*,video/*"
+                  multiple
                 />
-              </div>
-            </div>
-
-            <div class="row mb-2">
-              <div class="col-md-6">
-                <label for="contactPerson" class="form-label small text-muted"
-                  >Contact Person</label
-                >
-                <input
-                  type="text"
-                  id="contactPerson"
-                  name="entry.YOUR_GOOGLE_FORM_ENTRY_ID_FOR_CONTACT_PERSON"
-                  class="form-control form-control-sm"
-                />
-              </div>
-              <div class="col-md-6">
-                <label for="contactNumber" class="form-label small text-muted"
-                  >No. Telepon Contact Person</label
-                >
-                <input
-                  type="tel"
-                  id="contactNumber"
-                  name="entry.YOUR_GOOGLE_FORM_ENTRY_ID_FOR_CONTACT_NUMBER"
-                  class="form-control form-control-sm"
-                />
+                <div class="form-text small text-muted">
+                  Max file size: 10MB. Accepted formats: images (jpg, png, gif),
+                  videos (mp4, mov).
+                </div>
               </div>
             </div>
 
@@ -229,40 +205,10 @@
                 id="issue"
                 name="entry.902491819"
                 class="form-control form-control-sm"
-                rows="8"
+                rows="5"
                 required
               ></textarea>
               <div class="invalid-feedback">Issue harus diisi!</div>
-            </div>
-
-            <div class="mb-2">
-              <label for="resolution" class="form-label small text-muted"
-                >Resolusi / Tindak Lanjut</label
-              >
-              <textarea
-                id="resolution"
-                name="entry.YOUR_GOOGLE_FORM_ENTRY_ID_FOR_RESOLUTION"
-                class="form-control form-control-sm"
-                rows="5"
-              ></textarea>
-            </div>
-
-            <div class="mb-3">
-              <label for="fileUpload" class="form-label small text-muted"
-                >Upload Foto/Video</label
-              >
-              <input
-                type="file"
-                id="fileUpload"
-                name="entry.YOUR_GOOGLE_FORM_ENTRY_ID_FOR_FILE_UPLOAD"
-                class="form-control form-control-sm"
-                accept="image/*,video/*"
-                multiple
-              />
-              <div class="form-text small text-muted">
-                Max file size: 10MB. Accepted formats: images (jpg, png, gif),
-                videos (mp4, mov).
-              </div>
             </div>
 
             <div class="mb-2">
@@ -351,169 +297,203 @@
           if (star) {
             star.remove();
           }
-          // Also remove 'required' attribute and invalid-feedback display
-          const input = document.getElementById(label.getAttribute('for'));
-          if (input) {
-            input.removeAttribute('required');
-            input.classList.remove('is-invalid');
-            const invalidFeedback = input.nextElementSibling;
-            if (invalidFeedback && invalidFeedback.classList.contains('invalid-feedback')) {
-              invalidFeedback.style.display = 'none';
-            }
-          }
         });
 
-        // Add '*' and 'required' attribute based on errorSystem selection
-        const fieldsToValidate = {};
-
+        // Menambahkan tanda '*' sesuai dengan pilihan errorSystem
         if (errorSystem === "ki") {
-          fieldsToValidate.brand = true;
-          fieldsToValidate.region = true;
-          fieldsToValidate.cabang = true;
-          fieldsToValidate.NCust = true;
-          fieldsToValidate.pic = true;
-          fieldsToValidate.NoKwn = true;
-          fieldsToValidate.issue = true;
+          document.querySelector('label[for="region"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="cabang"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="brand"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="NCust"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="pic"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="NoKwn"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="issue"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
         } else if (errorSystem === "mss" || errorSystem === "wise") {
-          fieldsToValidate.region = true;
-          fieldsToValidate.cabang = true;
-          fieldsToValidate.NCust = true;
-          fieldsToValidate.pic = true;
-          fieldsToValidate.NoKwn = true;
-          fieldsToValidate.issue = true;
-          fieldsToValidate.IdPolo = true;
+          document.querySelector('label[for="region"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="cabang"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="NCust"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="pic"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="NoKwn"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="issue"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="IdPolo"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
         } else if (errorSystem === "login") {
-          fieldsToValidate.region = true;
-          fieldsToValidate.cabang = true;
-          fieldsToValidate.pic = true;
-          fieldsToValidate.issue = true;
-        }
-
-        // Apply required attributes and '*' to labels
-        for (const fieldId in fieldsToValidate) {
-          const label = document.querySelector(`label[for="${fieldId}"]`);
-          const input = document.getElementById(fieldId);
-          if (label && input) {
-            label.innerHTML += ' <span class="text-danger">*</span>';
-            input.setAttribute('required', 'required');
-          }
+          document.querySelector('label[for="region"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="cabang"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="pic"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
+          document.querySelector('label[for="issue"]').innerHTML +=
+            ' <span class="text-danger">*</span>';
         }
       }
 
-      // Event listener for form submission
+      // Event listener untuk validasi saat form disubmit
       document
         .getElementById("faqForm")
         .addEventListener("submit", function (e) {
           e.preventDefault();
 
-          // Validate all fields that are currently marked as required
-          let allFieldsValid = true;
-          const form = this;
-          const requiredInputs = form.querySelectorAll('[required]');
-
-          requiredInputs.forEach(input => {
-            if (!input.value.trim()) {
-              input.classList.add('is-invalid');
-              allFieldsValid = false;
-            } else {
-              input.classList.remove('is-invalid');
-            }
-          });
-
-          if (!allFieldsValid) {
-            Swal.fire(
-              "Error",
-              "Harap lengkapi semua field yang wajib diisi!",
-              "error"
-            );
-            return; // Stop form submission if validation fails
-          }
-
+          // Ambil nilai field dari form
           const errorSystem = document.getElementById("errorSystem").value;
-          const brand = document.getElementById("brand").value;
+          const region = document.getElementById("region").value;
+          const cabang = document.getElementById("cabang").value;
+          const NCust = document.getElementById("NCust").value;
+          const pic = document.getElementById("pic").value;
+          const NoKwn = document.getElementById("NoKwn").value;
+          const issue = document.getElementById("issue").value;
+          const IdPolo = document.getElementById("IdPolo").value;
+          const fileUpload = document.getElementById("fileUpload").files; // Get the selected files
 
-          // Determine Google Form link based on Brand
-          let googleFormLink = "";
-          if (brand === "nb") {
-            googleFormLink =
-              "https://docs.google.com/forms/d/e/1FAIpQLSdAIIAXXpbDmdO8qtWnyAgutCopPTGDhL5-tprvCKts1yZG0w/formResponse";
-          } else if (brand === "mas") {
-            googleFormLink =
-              "https://docs.google.com/forms/d/e/1FAIpQLSeICODvzS46C_yN3W7G2WPq9QnN5FAZcj_Cm1KiDu52akapuA/formResponse";
-          } else if (brand === "mtr") {
-            googleFormLink =
-              "https://docs.google.com/forms/d/e/1FAIpQLSdnVEYF8LUO_irXpkrQSBKWIG__fh3tw4ClkqtNwFfKB2SB2Q/formResponse";
-          } else if (brand === "mbl") {
-            googleFormLink =
-              "https://docs.google.com/forms/d/e/1FAIpQLSeUfH1Y4ct2KJXm6dVIvb8yO44qWGfJpVAP9M-TFSgrg2PDzQ/formResponse";
+          // Validasi berdasarkan error system
+          let valid = true;
+          let message = "";
+
+          if (errorSystem === "ki") {
+            if (!region || !cabang || !NCust || !pic || !NoKwn || !issue) {
+              valid = false;
+              message =
+                "Harap lengkapi semua field yang wajib diisi untuk Error Sistem KI!";
+            }
+          } else if (errorSystem === "mss" || errorSystem === "wise") {
+            if (
+              !region ||
+              !cabang ||
+              !NCust ||
+              !pic ||
+              !NoKwn ||
+              !issue ||
+              !IdPolo
+            ) {
+              valid = false;
+              message =
+                "Harap lengkapi semua field yang wajib diisi untuk Error Sistem MSS/WISE!";
+            }
+          } else if (errorSystem === "login") {
+            if (!region || !cabang || !pic || !issue) {
+              valid = false;
+              message =
+                "Harap lengkapi semua field yang wajib diisi untuk Error Sistem Login!";
+            }
           } else {
-            Swal.fire("Error", "Pilih brand yang valid!", "error");
-            return;
+            valid = false;
+            message = "Pilih Error Sistem yang valid!";
           }
 
-          form.action = googleFormLink;
-          form.method = "POST";
+          if (!valid) {
+            Swal.fire("Error", message, "error");
+          } else {
+            // Tentukan link Google Form berdasarkan Brand
+            let googleFormLink = "";
+            const brand = document.getElementById("brand").value;
 
-          // IMPORTANT: File uploads to Google Forms directly from a client-side form
-          // are not straightforward. The `fileUpload` field will likely NOT work
-          // as expected for direct upload. You generally need a backend or Google Apps Script
-          // to handle file uploads and then submit the file's Google Drive URL to the form.
-          // For this example, the form will submit, but the file data itself won't be sent.
+            if (brand === "nb") {
+              googleFormLink =
+                "https://docs.google.com/forms/d/e/1FAIpQLSdAIIAXXpbDmdO8qtWnyAgutCopPTGDhL5-tprvCKts1yZG0w/formResponse";
+            } else if (brand === "mas") {
+              googleFormLink =
+                "https://docs.google.com/forms/d/e/1FAIpQLSeICODvzS46C_yN3W7G2WPq9QnN5FAZcj_Cm1KiDu52akapuA/formResponse";
+            } else if (brand === "mtr") {
+              googleFormLink =
+                "https://docs.google.com/forms/d/e/1FAIpQLSdnVEYF8LUO_irXpkrQSBKWIG__fh3tw4ClkqtNwFfKB2SB2Q/formResponse";
+            } else if (brand === "mbl") {
+              googleFormLink =
+                "https://docs.google.com/forms/d/e/1FAIpQLSeUfH1Y4ct2KJXm6dVIvb8yO44qWGfJpVAP9M-TFSgrg2PDzQ/formResponse";
+            } else {
+              valid = false;
+              message = "Pilih brand yang valid!";
+            }
 
-          form.submit();
+            if (valid) {
+              const form = document.getElementById("faqForm");
+              form.action = googleFormLink;
+              form.method = "POST";
 
-          Swal.fire({
-            title: "Mengirim...",
-            text: "Mohon tunggu sebentar.",
-            allowOutsideClick: false,
-            didOpen: () => {
-              Swal.showLoading();
-            },
-          });
+              // Check if files are selected and handle them
+              if (fileUpload.length > 0) {
+                // IMPORTANT: Directly uploading files to Google Forms via a simple POST request
+                // from an external HTML form is NOT straightforward. Google Forms usually handles
+                // file uploads through its own UI and stores them in Google Drive.
+                //
+                // To truly integrate file uploads, you would typically need a backend server
+                // to handle the file upload, store it (e.g., in Google Drive via Google Drive API),
+                // and then submit the file's URL to your Google Form.
+                //
+                // For a simple client-side HTML form submitting to Google Forms,
+                // the file input will likely NOT work as expected for direct upload.
+                //
+                // As a workaround for this client-side form, you could:
+                // 1. Instruct users to upload files manually to a shared folder and paste the link.
+                // 2. Consider using a different form submission method if file upload is critical.
+                //
+                // For this example, we'll proceed with submitting the form, but be aware
+                // that the `fileUpload` field will not be directly processed by Google Forms
+                // if it's expecting a file upload through its native mechanism.
+                //
+                // If you *must* have file uploads, you'd generally need to:
+                // a. Use Google Apps Script to create a web app that receives the file,
+                //    uploads it to Drive, and then submits the form.
+                // b. Use a backend server to handle the upload and Google Drive API.
 
-          // Simulate success after a delay (replace with actual form submission success handling)
-          setTimeout(function () {
-            Swal.fire(
-              "Berhasil!",
-              "Formulir berhasil dikirim.",
-              "success"
-            ).then(() => {
-              form.reset(); // Reset the form after successful submission
-              // Optionally, reload region data if needed
-              loadRegionData();
-              // Reset required fields based on initial state or default value
-              updateRequiredFields(document.getElementById("errorSystem").value);
-            });
-          }, 2000); // Simulate 2-second submission time
+                // For a basic setup, you might consider appending the file names or a placeholder
+                // if direct upload isn't feasible with your current Google Form setup.
+                // However, without a backend, the actual file data won't go to Google Forms.
+
+                // If your Google Form has a "File Upload" question, you need to find its
+                // `entry.XXXXXXXXXX` ID and typically, the form would expect a Google Drive URL
+                // in that field, not the file itself.
+
+                // For demonstration, we'll just submit the form. The `fileUpload` input
+                // has the correct `name` attribute that you would get from inspecting
+                // the Google Form's file upload question.
+              }
+
+              form.submit();
+
+              // Menunggu hingga pengiriman selesai
+              setTimeout(function () {
+                // Simulasi pengiriman sukses atau gagal
+                const success = true; // Setel ke false untuk gagal
+
+                if (success) {
+                  Swal.fire(
+                    "Berhasil!",
+                    "Formulir berhasil dikirim.",
+                    "success"
+                  );
+                } else {
+                  Swal.fire("Gagal!", "Pengiriman formulir gagal.", "error");
+                }
+              }, 2000); // Waktu tunggu untuk simulasi
+            }
+          }
         });
 
-      // Load region data when the page loads
+      // Load region data saat halaman dimuat
       document.addEventListener("DOMContentLoaded", function () {
         loadRegionData();
-        // Initialize required fields based on the default or initial errorSystem value
-        updateRequiredFields(document.getElementById("errorSystem").value);
       });
-
-      // Event listener for errorSystem dropdown
+      // Event listener untuk dropdown error system
       document
         .getElementById("errorSystem")
         .addEventListener("change", function () {
-          updateRequiredFields(this.value);
+          const errorSystem = this.value;
+          updateRequiredFields(errorSystem); // Panggil fungsi dengan parameter yang sesuai
         });
-
-      // Add event listeners for input validity to show/hide invalid feedback
-      document.querySelectorAll('.form-control, .form-select').forEach(input => {
-        input.addEventListener('input', () => {
-          if (input.checkValidity()) {
-            input.classList.remove('is-invalid');
-          }
-        });
-        input.addEventListener('change', () => { // For selects
-          if (input.checkValidity()) {
-            input.classList.remove('is-invalid');
-          }
-        });
-      });
     </script>
   </body>
 </html>
