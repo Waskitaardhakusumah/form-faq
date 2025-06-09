@@ -17,8 +17,8 @@
     />
   </head>
   <body class="bg-light">
-    <div class="container py-3">
-      <h1 class="mb-4 text-center">Form FAQ - WOM Finance</h1>
+    <div class="container-fluid py-3">
+      <h1 class="mb-4 text-center">Isi Form FAQ - WOM Finance</h1>
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
           <h5 class="mb-0 small">Isi Form FAQ</h5>
@@ -58,7 +58,7 @@
             </div>
 
             <div class="row mb-2">
-              <div class="col-">
+              <div class="col-md-6">
                 <label for="region" class="form-label small text-muted"
                   >Region</label
                 >
@@ -68,7 +68,7 @@
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Region --</option>
-                  </select>
+                </select>
               </div>
               <div class="col-md-6">
                 <label for="cabang" class="form-label small text-muted"
@@ -80,7 +80,7 @@
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Cabang --</option>
-                  </select>
+                </select>
               </div>
             </div>
 
@@ -464,21 +464,33 @@
 
               form.submit();
 
-              // Menunggu hingga pengiriman selesai
+              // After successful submission, generate and display a ticket number
+              // This is a client-side generated number and NOT from Google Forms itself.
               setTimeout(function () {
-                // Simulasi pengiriman sukses atau gagal
-                const success = true; // Setel ke false untuk gagal
+                const success = true; // Assume success after form.submit() for this example
 
                 if (success) {
-                  Swal.fire(
-                    "Berhasil!",
-                    "Formulir berhasil dikirim.",
-                    "success"
-                  );
+                  // Generate a simple ticket number (e.g., timestamp-based)
+                  const ticketNumber = "WOM-" + Date.now().toString().slice(-8); // Example: WOM-last 8 digits of timestamp
+
+                  Swal.fire({
+                    title: "Berhasil!",
+                    html: `Formulir berhasil dikirim.<br>Nomor Tiket Anda: <strong>${ticketNumber}</strong>`, // Added strong tag for emphasis
+                    icon: "success",
+                  }).then(() => {
+                    // Optional: Reset the form after success
+                    form.reset();
+                    // Remove validation styles
+                    form.classList.remove("was-validated");
+                    // Reload region data to reset dropdowns
+                    loadRegionData();
+                    // Clear required field indicators
+                    updateRequiredFields("");
+                  });
                 } else {
                   Swal.fire("Gagal!", "Pengiriman formulir gagal.", "error");
                 }
-              }, 2000); // Waktu tunggu untuk simulasi
+              }, 2000); // Wait for 2 seconds to simulate submission
             }
           }
         });
