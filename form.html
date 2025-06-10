@@ -24,7 +24,7 @@
           <h5 class="mb-0 small">Isi Form FAQ</h5>
         </div>
         <div class="card-body">
-          <form id="faqForm" method="POST" enctype="multipart/form-data" action="https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec">
+          <form id="faqForm" method="POST" enctype="multipart/form-data" action="AKfycby7EzS_v8XLMsNwtzSXi-GLu4RZl1j1Vln4jJH4TqwXMrQbJupAo2bK-1KRTHBjh-d3AA">
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="brand" class="form-label small text-muted"
@@ -241,7 +241,7 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
   e.preventDefault();
   var formData = new FormData(this);
 
-  fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec", {
+  fetch("AKfycby7EzS_v8XLMsNwtzSXi-GLu4RZl1j1Vln4jJH4TqwXMrQbJupAo2bK-1KRTHBjh-d3AA", {
     method: "POST",
     body: formData,
   })
@@ -555,7 +555,7 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
           formData.append("fileType", file.type);
 
           try {
-            const response = await fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec", {
+            const response = await fetch("AKfycby7EzS_v8XLMsNwtzSXi-GLu4RZl1j1Vln4jJH4TqwXMrQbJupAo2bK-1KRTHBjh-d3AA", {
               method: "POST",
               body: formData
             });
@@ -607,7 +607,7 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
         // Show loading
         showLoading("Mengirim form...");
 
-        fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec", {
+        fetch("AKfycby7EzS_v8XLMsNwtzSXi-GLu4RZl1j1Vln4jJH4TqwXMrQbJupAo2bK-1KRTHBjh-d3AA", {
           method: "POST",
           body: formData
         })
