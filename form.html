@@ -237,22 +237,80 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
   e.preventDefault();
   var formData = new FormData(this);
 
-  fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec", {
-    method: "POST",
-    body: formData,
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.status == "success") {
-      Swal.fire({
-        title: "Upload Berhasil!",
-        html: "File Anda telah di-upload.<br>Link folder: <a href='" + data.folderUrl + "' target='_blank'>" + data.folderUrl + "</a>",
-        icon: "success"
+  // Fetch ticket number from JSON file
+  fetch("tickets.json")
+    .then(response => response.json())
+    .then(ticketData => {
+      // Find first unused ticket
+      const unusedTicket = ticketData.tickets.find(ticket => !ticket.used);
+      
+      if (!unusedTicket) {
+        Swal.fire({
+          title: "Error",
+          text: "Tidak ada nomor tiket yang tersedia",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
+        return;
+      }
+
+      // Add ticket number to form data
+      formData.append("ticketNumber", unusedTicket.id);
+
+      // Submit form
+      fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec", {
+        method: "POST",
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status == "success") {
+          // Mark ticket as used in JSON
+          unusedTicket.used = true;
+          
+          // Update JSON file (Note: This would typically be handled by a backend server)
+          // For now, we'll just show the success message
+          Swal.fire({
+            title: "Upload Berhasil!",
+            html: `File Anda telah di-upload.<br>Nomor Tiket: <strong>${unusedTicket.id}</strong><br>Link folder: <a href='${data.folderUrl}' target='_blank'>${data.folderUrl}</a>`,
+            icon: "success",
+            confirmButtonText: "OK"
+          }).then(() => {
+            // Reset form after success
+            document.getElementById("faqForm").reset();
+            // Remove validation styles
+            document.getElementById("faqForm").classList.remove("was-validated");
+            // Reload region data to reset dropdowns
+            loadRegionData();
+            // Clear required field indicators
+            updateRequiredFields("");
+          });
+        } else {
+          Swal.fire({
+            title: "Gagal",
+            text: "Terjadi error saat upload",
+            icon: "error",
+            confirmButtonText: "OK"
+          });
+        }
+      })
+      .catch(error => {
+        Swal.fire({
+          title: "Error",
+          text: "Terjadi kesalahan saat mengirim form",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
       });
-    } else {
-      Swal.fire("Gagal", "Terjadi error saat upload", "error");
-    }
-  });
+    })
+    .catch(error => {
+      Swal.fire({
+        title: "Error",
+        text: "Terjadi kesalahan saat mengambil nomor tiket",
+        icon: "error",
+        confirmButtonText: "OK"
+      });
+    });
 });
       
 </script>
@@ -266,7 +324,7 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
       // Ambil data dari file region.json dan isi dropdown
       // Fungsi untuk memuat dropdown Region dan Cabang
       function loadRegionData() {
-        fetch("region.json") // Pastikan path JSON sesuai dengan lokasi file Anda
+        fetch("region.json")
           .then((response) => response.json())
           .then((data) => {
             // Dapatkan elemen select untuk region dan cabang
@@ -274,41 +332,46 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
             const cabangSelect = document.getElementById("cabang");
 
             // Clear existing options
-            regionSelect.innerHTML =
-              '<option value="">-- Pilih Region --</option>';
-            cabangSelect.innerHTML =
-              '<option value="">-- Pilih Cabang --</option>';
+            regionSelect.innerHTML = '<option value="">-- Pilih Region --</option>';
+            cabangSelect.innerHTML = '<option value="">-- Pilih Cabang --</option>';
 
             // Menambahkan option untuk region
-            const regions = [...new Set(data.map((item) => item.REGION_NAME))]; // Mengambil region yang unik
-            regions.forEach((region) => {
+            data.regions.forEach((region) => {
               const option = document.createElement("option");
-              option.value = region;
-              option.textContent = region;
+              option.value = region.id;
+              option.textContent = region.name;
               regionSelect.appendChild(option);
             });
 
             // Menambahkan event listener untuk mengubah cabang saat region dipilih
             regionSelect.addEventListener("change", function () {
-              const selectedRegion = regionSelect.value;
-              if (selectedRegion) {
+              const selectedRegionId = regionSelect.value;
+              if (selectedRegionId) {
                 // Menampilkan cabang berdasarkan region yang dipilih
-                const filteredCabangs = data.filter(
-                  (item) => item.REGION_NAME === selectedRegion
-                );
-                cabangSelect.innerHTML =
-                  '<option value="">-- Pilih Cabang --</option>'; // Clear existing options
-                filteredCabangs.forEach((item) => {
-                  const option = document.createElement("option");
-                  option.value = item.COMP_OFFICE_NAME;
-                  option.textContent = item.COMP_OFFICE_NAME;
-                  cabangSelect.appendChild(option);
-                });
+                const selectedRegion = data.regions.find(r => r.id === selectedRegionId);
+                cabangSelect.innerHTML = '<option value="">-- Pilih Cabang --</option>';
+                
+                if (selectedRegion) {
+                  selectedRegion.branches.forEach((branch) => {
+                    const option = document.createElement("option");
+                    option.value = branch.id;
+                    option.textContent = branch.name;
+                    cabangSelect.appendChild(option);
+                  });
+                }
+              } else {
+                cabangSelect.innerHTML = '<option value="">-- Pilih Cabang --</option>';
               }
             });
           })
           .catch((error) => {
             console.error("Error fetching region data:", error);
+            Swal.fire({
+              title: "Error",
+              text: "Gagal memuat data region dan cabang",
+              icon: "error",
+              confirmButtonText: "OK"
+            });
           });
       }
 
