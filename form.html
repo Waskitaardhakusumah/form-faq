@@ -24,7 +24,7 @@
           <h5 class="mb-0 small">Isi Form FAQ</h5>
         </div>
         <div class="card-body">
-          <form id="faqForm" method="POST" novalidate>
+          <form id="faqForm" method="POST" enctype="multipart/form-data" action="https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec">
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="brand" class="form-label small text-muted"
@@ -185,7 +185,7 @@
                 <input
                   type="file"
                   id="fileUpload"
-                  name="https://docs.google.com/forms/d/e/1FAIpQLSdOd_49wUJN2lg84FFXCzX65srOq8H4q6nfOPXIt9hV6Lye0Q/viewform?usp=header"
+                  name="fileUpload"
                   class="form-control form-control-sm"
                   accept="image/*,video/*"
                   multiple
@@ -231,7 +231,31 @@
         </div>
       </div>
     </div>
+    
+    <script>
+document.getElementById("faqForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  var formData = new FormData(this);
 
+  fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec", {
+    method: "POST",
+    body: formData,
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status == "success") {
+      Swal.fire({
+        title: "Upload Berhasil!",
+        html: "File Anda telah di-upload.<br>Link folder: <a href='" + data.folderUrl + "' target='_blank'>" + data.folderUrl + "</a>",
+        icon: "success"
+      });
+    } else {
+      Swal.fire("Gagal", "Terjadi error saat upload", "error");
+    }
+  });
+});
+      
+</script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
