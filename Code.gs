@@ -1,23 +1,23 @@
 // Configuration
 const BRAND_CONFIGS = {
   'nb': {
-    folderId: 'YOUR_NB_FOLDER_ID',
-    spreadsheetId: 'YOUR_NB_SPREADSHEET_ID',
+    folderId: '1sWfBwavReucLjd3ke4-Tysia067rBN253VV1n04yQGF9ItX_sz5sHRaF075nSatGEk6AGs6L?usp=drive_link',
+    spreadsheetId: '1NR1CPFzD0d3y8tdsXK0m5p8_hTN0HrcvpEE0yR8EC40/edit?usp=sharing',
     name: 'Reguler'
   },
   'mas': {
-    folderId: 'YOUR_MAS_FOLDER_ID',
-    spreadsheetId: 'YOUR_MAS_SPREADSHEET_ID',
+    folderId: '1aSeokj9nxxMu_uT0X8IFA7kPANyzqN-LC2IOa6nNeQyFR1EuC3lBD4zjXf-LksvznUHDrdCi?usp=drive_link',
+    spreadsheetId: '1NR1CPFzD0d3y8tdsXK0m5p8_hTN0HrcvpEE0yR8EC40/edit?usp=sharing',
     name: 'MasKu'
   },
   'mtr': {
-    folderId: 'YOUR_MTR_FOLDER_ID',
-    spreadsheetId: 'YOUR_MTR_SPREADSHEET_ID',
+    folderId: '1QfRv99sY98M5Yb6PhmOjy1dfWKMVYD1BMxDyBT-6DZ6yNWDwlD78TJC3O1rgAq3r8NgSKZPp?usp=drive_link',
+    spreadsheetId: '1NR1CPFzD0d3y8tdsXK0m5p8_hTN0HrcvpEE0yR8EC40/edit?usp=sharing',
     name: 'MotorKu'
   },
   'mbl': {
-    folderId: 'YOUR_MBL_FOLDER_ID',
-    spreadsheetId: 'YOUR_MBL_SPREADSHEET_ID',
+    folderId: '1jS4DzdQscGROZ0wEX9yN4ORK_zguUBfM7uO9PoSOeu2bazX2HRpDu7ssU5J3VYbigl8Xyf49?usp=drive_link',
+    spreadsheetId: '1NR1CPFzD0d3y8tdsXK0m5p8_hTN0HrcvpEE0yR8EC40/edit?usp=sharing',
     name: 'MobilKu'
   }
 };
