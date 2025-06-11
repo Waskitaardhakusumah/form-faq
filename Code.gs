@@ -1,4 +1,6 @@
 // Configuration
+//AKfycbzBsqzHK8cgySmpaZtk0FUv5uPLZq8o1sawDTEwctjkzXast2tk0BafNGSEefaRUcL95A
+
 const BRAND_CONFIGS = {
   'nb': {
     folderId: '1sWfBwavReucLjd3ke4-Tysia067rBN253VV1n04yQGF9ItX_sz5sHRaF075nSatGEk6AGs6L?usp=drive_link',
