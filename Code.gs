@@ -1,6 +1,27 @@
 // Configuration
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID'; // Replace with your spreadsheet ID
-const FOLDER_ID = 'YOUR_FOLDER_ID'; // Replace with your Google Drive folder ID
+const BRAND_CONFIGS = {
+  'nb': {
+    folderId: 'YOUR_NB_FOLDER_ID',
+    spreadsheetId: 'YOUR_NB_SPREADSHEET_ID',
+    name: 'Reguler'
+  },
+  'mas': {
+    folderId: 'YOUR_MAS_FOLDER_ID',
+    spreadsheetId: 'YOUR_MAS_SPREADSHEET_ID',
+    name: 'MasKu'
+  },
+  'mtr': {
+    folderId: 'YOUR_MTR_FOLDER_ID',
+    spreadsheetId: 'YOUR_MTR_SPREADSHEET_ID',
+    name: 'MotorKu'
+  },
+  'mbl': {
+    folderId: 'YOUR_MBL_FOLDER_ID',
+    spreadsheetId: 'YOUR_MBL_SPREADSHEET_ID',
+    name: 'MobilKu'
+  }
+};
+
 const SHEET_NAME = 'FileUploads';
 
 // Handle file upload
@@ -13,54 +34,81 @@ function doPost(e) {
       const fileBlob = e.postData.contents;
       const fileName = data.fileName;
       const fileType = data.fileType;
+      const brand = data.brand;
+      
+      if (!brand || !BRAND_CONFIGS[brand]) {
+        throw new Error('Invalid brand');
+      }
       
       // Create a new folder for this submission
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const folderName = `Submission_${timestamp}`;
-      const folder = DriveApp.getFolderById(FOLDER_ID).createFolder(folderName);
+      const folderName = `${BRAND_CONFIGS[brand].name}_${timestamp}`;
+      const folder = DriveApp.getFolderById(BRAND_CONFIGS[brand].folderId).createFolder(folderName);
       
       // Upload the file to the folder
       const file = folder.createFile(fileBlob);
       file.setName(fileName);
       
-      // Return the file URL
+      // Get the spreadsheet URL
+      const spreadsheet = SpreadsheetApp.openById(BRAND_CONFIGS[brand].spreadsheetId);
+      const spreadsheetUrl = spreadsheet.getUrl();
+      
+      // Return the file URL and spreadsheet URL
       return ContentService.createTextOutput(JSON.stringify({
         status: 'success',
         fileUrl: file.getUrl(),
-        folderUrl: folder.getUrl()
+        folderUrl: folder.getUrl(),
+        spreadsheetUrl: spreadsheetUrl
       })).setMimeType(ContentService.MimeType.JSON);
     }
     
     // If it's a form submission
-    if (data.fileUrls) {
-      const fileUrls = JSON.parse(data.fileUrls);
+    if (data.fileData) {
+      const fileData = JSON.parse(data.fileData);
       const ticketNumber = generateTicketNumber();
+      const spreadsheetLinks = {};
       
-      // Add entry to spreadsheet
-      const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
-      const rowData = [
-        ticketNumber,
-        new Date(),
-        data.brand || '',
-        data.errorSystem || '',
-        data.region || '',
-        data.cabang || '',
-        data.NCust || '',
-        data.IdCust || '',
-        data.pic || '',
-        data.NoKwn || '',
-        data.IdPolo || '',
-        data.NoApp || '',
-        data.NoOdrn || '',
-        data.issue || '',
-        fileUrls.join(', ')
-      ];
-      sheet.appendRow(rowData);
+      // Group files by brand
+      const filesByBrand = {};
+      fileData.forEach(file => {
+        if (!filesByBrand[file.brand]) {
+          filesByBrand[file.brand] = [];
+        }
+        filesByBrand[file.brand].push(file.url);
+      });
+      
+      // Add entries to brand-specific spreadsheets
+      Object.entries(filesByBrand).forEach(([brand, fileUrls]) => {
+        if (BRAND_CONFIGS[brand]) {
+          const sheet = SpreadsheetApp.openById(BRAND_CONFIGS[brand].spreadsheetId).getSheetByName(SHEET_NAME);
+          const rowData = [
+            ticketNumber,
+            new Date(),
+            data.brand || '',
+            data.errorSystem || '',
+            data.region || '',
+            data.cabang || '',
+            data.NCust || '',
+            data.IdCust || '',
+            data.pic || '',
+            data.NoKwn || '',
+            data.IdPolo || '',
+            data.NoApp || '',
+            data.NoOdrn || '',
+            data.issue || '',
+            fileUrls.join(', ')
+          ];
+          sheet.appendRow(rowData);
+          
+          // Store spreadsheet URL
+          spreadsheetLinks[BRAND_CONFIGS[brand].name] = sheet.getParent().getUrl();
+        }
+      });
       
       return ContentService.createTextOutput(JSON.stringify({
         status: 'success',
         ticketNumber: ticketNumber,
-        folderUrl: fileUrls[0] ? DriveApp.getFileById(DriveApp.getFileByUrl(fileUrls[0]).getId()).getParents().next().getUrl() : ''
+        spreadsheetLinks: spreadsheetLinks
       })).setMimeType(ContentService.MimeType.JSON);
     }
     
@@ -84,9 +132,13 @@ function generateTicketNumber() {
   return `WOM-${timestamp.slice(-8)}-${random}`;
 }
 
-// Create the spreadsheet if it doesn't exist
-function createSpreadsheet() {
-  const ss = SpreadsheetApp.create('FAQ File Uploads');
+// Create the spreadsheet for a brand if it doesn't exist
+function createBrandSpreadsheet(brand) {
+  if (!BRAND_CONFIGS[brand]) {
+    throw new Error('Invalid brand');
+  }
+  
+  const ss = SpreadsheetApp.create(`${BRAND_CONFIGS[brand].name} File Uploads`);
   const sheet = ss.getActiveSheet();
   sheet.setName(SHEET_NAME);
   

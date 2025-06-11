@@ -543,6 +543,13 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
         const uploadProgress = document.getElementById("uploadProgress");
         const progressBar = uploadProgress.querySelector(".progress-bar");
         const uploadedFiles = document.getElementById("uploadedFiles");
+        const brand = document.getElementById("brand").value;
+        
+        if (!brand) {
+          Swal.fire("Error", "Pilih brand terlebih dahulu!", "error");
+          this.value = ""; // Clear file input
+          return;
+        }
         
         uploadProgress.classList.remove("d-none");
         uploadedFiles.innerHTML = "";
@@ -553,6 +560,7 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
           formData.append("file", file);
           formData.append("fileName", file.name);
           formData.append("fileType", file.type);
+          formData.append("brand", brand);
 
           try {
             const response = await fetch("AKfycby7EzS_v8XLMsNwtzSXi-GLu4RZl1j1Vln4jJH4TqwXMrQbJupAo2bK-1KRTHBjh-d3AA", {
@@ -569,11 +577,15 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
               fileLink.innerHTML = `<a href="${result.fileUrl}" target="_blank">${file.name}</a>`;
               uploadedFiles.appendChild(fileLink);
 
-              // Add hidden input with file URL
+              // Add hidden input with file URL and brand
               const hiddenInput = document.createElement("input");
               hiddenInput.type = "hidden";
               hiddenInput.name = "fileUrls[]";
-              hiddenInput.value = result.fileUrl;
+              hiddenInput.value = JSON.stringify({
+                url: result.fileUrl,
+                brand: brand,
+                spreadsheetUrl: result.spreadsheetUrl
+              });
               document.getElementById("faqForm").appendChild(hiddenInput);
             }
 
@@ -593,16 +605,16 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
         }, 1000);
       });
 
-      // Modify the form submission to include file URLs
+      // Modify the form submission to include file URLs and brand information
       document.getElementById("faqForm").addEventListener("submit", function(e) {
         e.preventDefault();
         
-        // Get all file URLs
-        const fileUrls = Array.from(document.querySelectorAll('input[name="fileUrls[]"]')).map(input => input.value);
+        // Get all file URLs with their brand information
+        const fileData = Array.from(document.querySelectorAll('input[name="fileUrls[]"]')).map(input => JSON.parse(input.value));
         
-        // Add file URLs to form data
+        // Add file data to form data
         const formData = new FormData(this);
-        formData.append("fileUrls", JSON.stringify(fileUrls));
+        formData.append("fileData", JSON.stringify(fileData));
 
         // Show loading
         showLoading("Mengirim form...");
@@ -615,9 +627,19 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
         .then(data => {
           hideLoading();
           if (data.status === "success") {
+            let message = `Formulir berhasil dikirim.<br>Nomor Tiket: <strong>${data.ticketNumber}</strong><br>`;
+            
+            // Add links to brand-specific spreadsheets
+            if (data.spreadsheetLinks) {
+              message += "<br>Link Spreadsheet:<br>";
+              Object.entries(data.spreadsheetLinks).forEach(([brand, url]) => {
+                message += `<a href="${url}" target="_blank">${brand}</a><br>`;
+              });
+            }
+            
             Swal.fire({
               title: "Berhasil!",
-              html: `Formulir berhasil dikirim.<br>Nomor Tiket: <strong>${data.ticketNumber}</strong><br>Link folder: <a href="${data.folderUrl}" target="_blank">${data.folderUrl}</a>`,
+              html: message,
               icon: "success"
             }).then(() => {
               this.reset();
