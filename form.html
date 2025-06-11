@@ -190,6 +190,34 @@
               </div>
             </div>
 
+            <!-- File Uploads -->
+            <div class="row mb-2">
+              <div class="col-md-6">
+                <label for="photoUpload" class="form-label small text-muted">Upload Foto</label>
+                <input
+                  type="file"
+                  id="photoUpload"
+                  name="photoUpload"
+                  class="form-control form-control-sm"
+                  accept="image/*"
+                  multiple
+                />
+                <div class="invalid-feedback">Format foto tidak valid!</div>
+              </div>
+              <div class="col-md-6">
+                <label for="videoUpload" class="form-label small text-muted">Upload Video</label>
+                <input
+                  type="file"
+                  id="videoUpload"
+                  name="videoUpload"
+                  class="form-control form-control-sm"
+                  accept="video/*"
+                  multiple
+                />
+                <div class="invalid-feedback">Format video tidak valid!</div>
+              </div>
+            </div>
+
             <!-- Issue -->
             <div class="mb-2">
               <label for="issue" class="form-label small text-muted"
@@ -338,10 +366,70 @@
         }
       }
 
+      // Function to handle file uploads
+      async function handleFileUploads() {
+        const photoFiles = document.getElementById('photoUpload').files;
+        const videoFiles = document.getElementById('videoUpload').files;
+        const uploadResults = {
+          photos: [],
+          videos: []
+        };
+
+        // Handle photo uploads
+        for (let i = 0; i < photoFiles.length; i++) {
+          const file = photoFiles[i];
+          if (file.type.startsWith('image/')) {
+            const formData = new FormData();
+            formData.append('photo', file);
+            formData.append('brand', document.getElementById('brand').value);
+            formData.append('errorSystem', document.getElementById('errorSystem').value);
+            
+            try {
+              const response = await fetch('/upload-photo', {
+                method: 'POST',
+                body: formData
+              });
+              if (response.ok) {
+                const result = await response.json();
+                uploadResults.photos.push(result);
+              }
+            } catch (error) {
+              console.error('Error uploading photo:', error);
+            }
+          }
+        }
+
+        // Handle video uploads
+        for (let i = 0; i < videoFiles.length; i++) {
+          const file = videoFiles[i];
+          if (file.type.startsWith('video/')) {
+            const formData = new FormData();
+            formData.append('video', file);
+            formData.append('brand', document.getElementById('brand').value);
+            formData.append('errorSystem', document.getElementById('errorSystem').value);
+            
+            try {
+              const response = await fetch('/upload-video', {
+                method: 'POST',
+                body: formData
+              });
+              if (response.ok) {
+                const result = await response.json();
+                uploadResults.videos.push(result);
+              }
+            } catch (error) {
+              console.error('Error uploading video:', error);
+            }
+          }
+        }
+
+        return uploadResults;
+      }
+
       // Event listener untuk validasi saat form disubmit
       document
         .getElementById("faqForm")
-        .addEventListener("submit", function (e) {
+        .addEventListener("submit", async function (e) {
           e.preventDefault();
 
           // Ambil nilai field dari form
@@ -414,28 +502,35 @@
             }
 
             if (valid) {
-              // window.location.href = googleFormLink;
-              // Konfirmasi pengiriman
-              const form = document.getElementById("faqForm");
-              form.action = googleFormLink;
-              form.method = "POST";
-              form.submit();
+              try {
+                // Handle file uploads first
+                const uploadResults = await handleFileUploads();
+                
+                // Add file references to the form data
+                const formData = new FormData(this);
+                formData.append('uploadedPhotos', JSON.stringify(uploadResults.photos));
+                formData.append('uploadedVideos', JSON.stringify(uploadResults.videos));
 
-              // Menunggu hingga pengiriman selesai
-              setTimeout(function () {
-                // Simulasi pengiriman sukses atau gagal
-                const success = true; // Setel ke false untuk gagal
+                // Submit the form
+                const form = document.getElementById("faqForm");
+                form.action = googleFormLink;
+                form.method = "POST";
+                form.submit();
 
-                if (success) {
-                  Swal.fire(
-                    "Berhasil!",
-                    "Formulir berhasil dikirim.",
-                    "success"
-                  );
-                } else {
-                  Swal.fire("Gagal!", "Pengiriman formulir gagal.", "error");
-                }
-              }, 2000); // Waktu tunggu untuk simulasi
+                // Show success message
+                Swal.fire(
+                  "Berhasil!",
+                  "Formulir dan file berhasil dikirim.",
+                  "success"
+                );
+              } catch (error) {
+                console.error('Error during form submission:', error);
+                Swal.fire(
+                  "Error!",
+                  "Terjadi kesalahan saat mengirim formulir.",
+                  "error"
+                );
+              }
             }
           }
         });
