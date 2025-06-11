@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>More actions
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -8,28 +8,13 @@
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hWW+ALEwIH"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
     <link
       href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.min.css"
       rel="stylesheet"
     />
-    <style>
-      /* Optional: untuk memastikan iframe memiliki tinggi yang cukup */
-      .form-iframe-container {
-        border: 1px solid #dee2e6; /* Border untuk visualisasi container */
-        border-radius: 0.375rem; /* Match Bootstrap card-body border-radius */
-        overflow: hidden; /* Sembunyikan scrollbar jika tidak diperlukan di luar iframe */
-        height: 600px; /* Tinggi default untuk iframe, sesuaikan jika perlu */
-        transition: height 0.3s ease-in-out; /* Animasi saat tinggi berubah */
-      }
-      .form-iframe-container iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-      }
-    </style>
   </head>
   <body class="bg-light">
     <div class="container py-3">
@@ -116,15 +101,21 @@
                 </button>
               </div>
             </div>
-            <div id="googleFormLink" class="mt-3 d-none">
+             <div id="googleFormLink" class="mt-3 d-none">
               <p>Silakan isi Form untuk melaporkan kendala Anda:</p>
-              <button type="button" class="btn btn-primary" id="loadFormBtn">
+              <button type="button" class="btn btn-primary" id="isiFormBtn">
                 Isi Form
               </button>
+              <iframe
+                id="formIframe"
+                src=""
+                frameborder="0"
+                width="100%"
+                height="600px"
+                class="d-none mt-3"
+              ></iframe>
             </div>
           </form>
-          <div id="formIframeContainer" class="form-iframe-container mt-3 d-none">
-            </div>
         </div>
       </div>
     </div>
@@ -161,9 +152,7 @@
                   />
                 </div>
                 <div class="col-md-3">
-                  <label for="searchFeature" class="form-label"
-                    >Feature</label
-                  >
+                  <label for="searchFeature" class="form-label">Feature</label>
                   <input
                     type="text"
                     id="searchFeature"
@@ -172,9 +161,7 @@
                   />
                 </div>
                 <div class="col-md-3">
-                  <label for="searchKendala" class="form-label"
-                    >Kendala</label
-                  >
+                  <label for="searchKendala" class="form-label">Kendala</label>
                   <input
                     type="text"
                     id="searchKendala"
@@ -279,9 +266,9 @@
       const solusiTextarea = document.getElementById("solusi");
       const doneBtn = document.getElementById("doneBtn");
       const notDoneBtn = document.getElementById("notDoneBtn");
-      const googleFormLinkDiv = document.getElementById("googleFormLink"); // Ubah nama variabel
-      const loadFormBtn = document.getElementById("loadFormBtn"); // Tombol baru
-      const formIframeContainer = document.getElementById("formIframeContainer"); // Container iframe
+      const googleFormLink = document.getElementById("googleFormLink");
+      const isiFormBtn = document.getElementById("isiFormBtn"); // Get the new button
+      const formIframe = document.getElementById("formIframe"); // Get the iframe
       const searchResults = document.getElementById("searchResults");
       const paginationControls = document.getElementById("paginationControls");
 
@@ -322,10 +309,8 @@
 
       // Populate dropdown with unique values
       function populateDropdown(selectElement, values) {
-        // Cek apakah selectElement adalah 'sistemSelect' untuk mengubah teks default
-        const defaultOptionText = selectElement === sistemSelect ? "-- Pilih Sistem --" : "-- Pilih " + selectElement.id.charAt(0).toUpperCase() + selectElement.id.slice(1) + " --";
-
-        selectElement.innerHTML = `<option value="" class="small text-muted">${defaultOptionText}</option>`;
+        selectElement.innerHTML =
+          '<option value="" class="small text-muted">-- Pilih Sistem --</option>';
         values.forEach((value) => {
           const option = document.createElement("option");
           option.value = value;
@@ -342,20 +327,18 @@
 
       // Handle Sistem Change
       function handleSistemChange() {
-        // Sembunyikan iframe form saat dropdown berubah
-        formIframeContainer.classList.add("d-none");
-        formIframeContainer.innerHTML = ""; // Kosongkan iframe
-
         if (!sistemSelect.value) {
           // Reset semua dropdown dan textarea jika Sistem tidak dipilih
-          populateDropdown(featureSelect, []); // Mengosongkan Feature
-          populateDropdown(kendalaSelect, []); // Mengosongkan Kendala
+          featureSelect.innerHTML =
+            '<option value="" class="small text-muted">-- Pilih Feature --</option>';
+          kendalaSelect.innerHTML =
+            '<option value="" class="small text-muted">-- Pilih Kendala --</option>';
           solusiTextarea.value = "";
           featureSelect.disabled = true;
           kendalaSelect.disabled = true;
           doneBtn.disabled = true;
           notDoneBtn.disabled = true;
-          googleFormLinkDiv.classList.add("d-none"); // Sembunyikan kembali link form
+          formIframe.classList.add("d-none"); // Hide iframe
           return;
         }
 
@@ -371,28 +354,26 @@
         populateDropdown(featureSelect, filteredFeatures);
 
         // Reset Kendala dan Solusi
-        populateDropdown(kendalaSelect, []); // Mengosongkan Kendala
+        kendalaSelect.innerHTML =
+          '<option value="" class="small text-muted">-- Pilih Kendala --</option>';
         kendalaSelect.disabled = true;
         solusiTextarea.value = "";
         doneBtn.disabled = true;
         notDoneBtn.disabled = true;
-        googleFormLinkDiv.classList.add("d-none"); // Sembunyikan kembali link form
+        formIframe.classList.add("d-none"); // Hide iframe
       }
 
       // Handle Feature Change
       function handleFeatureChange() {
-        // Sembunyikan iframe form saat dropdown berubah
-        formIframeContainer.classList.add("d-none");
-        formIframeContainer.innerHTML = ""; // Kosongkan iframe
-
         if (!featureSelect.value) {
           // Reset dropdown Kendala dan Solusi jika Feature tidak dipilih
-          populateDropdown(kendalaSelect, []); // Mengosongkan Kendala
+          kendalaSelect.innerHTML =
+            '<option value="" class="small text-muted">-- Pilih Kendala --</option>';
           solusiTextarea.value = "";
           kendalaSelect.disabled = true;
           doneBtn.disabled = true;
           notDoneBtn.disabled = true;
-          googleFormLinkDiv.classList.add("d-none"); // Sembunyikan kembali link form
+          formIframe.classList.add("d-none"); // Hide iframe
           return;
         }
 
@@ -415,21 +396,17 @@
         solusiTextarea.value = "";
         doneBtn.disabled = true;
         notDoneBtn.disabled = true;
-        googleFormLinkDiv.classList.add("d-none"); // Sembunyikan kembali link form
+        formIframe.classList.add("d-none"); // Hide iframe
       }
 
       // Handle Kendala Change
       function handleKendalaChange() {
-        // Sembunyikan iframe form saat dropdown berubah
-        formIframeContainer.classList.add("d-none");
-        formIframeContainer.innerHTML = ""; // Kosongkan iframe
-
         if (!kendalaSelect.value) {
           // Reset Solusi jika Kendala tidak dipilih
           solusiTextarea.value = "";
           doneBtn.disabled = true;
           notDoneBtn.disabled = true;
-          googleFormLinkDiv.classList.add("d-none"); // Sembunyikan kembali link form
+          formIframe.classList.add("d-none"); // Hide iframe
           return;
         }
 
@@ -444,14 +421,13 @@
         solusiTextarea.value = solusi || "";
         doneBtn.disabled = !solusi;
         notDoneBtn.disabled = !solusi;
-        googleFormLinkDiv.classList.add("d-none"); // Pastikan link form tersembunyi secara default
+        formIframe.classList.add("d-none"); // Hide iframe
       }
 
       // Handle Done Button
       doneBtn.addEventListener("click", () => {
-        googleFormLinkDiv.classList.add("d-none");
-        formIframeContainer.classList.add("d-none"); // Sembunyikan iframe jika terlihat
-        formIframeContainer.innerHTML = ""; // Kosongkan iframe
+        googleFormLink.classList.add("d-none");
+        formIframe.classList.add("d-none"); // Ensure iframe is hidden on "Done"
         Swal.fire({
           icon: "success",
           title: "Berhasil",
@@ -461,7 +437,8 @@
 
       // Handle Not Done Button
       notDoneBtn.addEventListener("click", () => {
-        googleFormLinkDiv.classList.remove("d-none"); // Tampilkan tombol "Isi Form"
+        googleFormLink.classList.remove("d-none");
+        // Do not automatically show the iframe here, wait for "Isi Form" click
         Swal.fire({
           icon: "info",
           title: "Belum Selesai",
@@ -469,29 +446,10 @@
         });
       });
 
-      // Event listener untuk tombol "Isi Form"
-      loadFormBtn.addEventListener("click", () => {
-        // Tampilkan loading SweetAlert
-        showLoading("Memuat formulir...");
-
-        // Kosongkan container dan buat iframe baru
-        formIframeContainer.innerHTML = '';
-        const iframe = document.createElement('iframe');
-        iframe.src = 'form.html'; // Path ke form.html
-        iframe.title = 'Form Laporan Kendala';
-
-        // Event listener saat iframe selesai dimuat
-        iframe.onload = () => {
-            hideLoading(); // Sembunyikan loading setelah iframe dimuat
-            formIframeContainer.classList.remove('d-none'); // Tampilkan container iframe
-        };
-
-        iframe.onerror = () => {
-            hideLoading();
-            Swal.fire('Error', 'Gagal memuat formulir. Silakan coba lagi.', 'error');
-        };
-
-        formIframeContainer.appendChild(iframe);
+      // Handle "Isi Form" button click
+      isiFormBtn.addEventListener("click", () => {
+        formIframe.src = "form.html"; // Set the iframe source
+        formIframe.classList.remove("d-none"); // Make the iframe visible
       });
 
       // Function to display paginated results
@@ -625,6 +583,9 @@
               )) &&
             (searchKendala === "" ||
               item.Kendala.toLowerCase().includes(searchKendala.toLowerCase()))
+            //  &&
+            // (searchSolusi === "" ||
+            //   item.Solusi.toLowerCase().includes(searchSolusi.toLowerCase()))
           );
         });
 
