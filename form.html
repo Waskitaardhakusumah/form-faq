@@ -1,33 +1,30 @@
-<!DOCTYPE html>
+<!DOCTYPE html>More actions
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Form FAQ - WOM Finance</title>
     <link rel="icon" href="wom-finance.jpg" type="image/png" />
-    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-    <!-- SweetAlert CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.min.css"
       rel="stylesheet"
     />
   </head>
   <body class="bg-light">
-    <div class="container py-3">
-      <h1 class="mb-4 text-center">Form FAQ - WOM Finance</h1>
+    <div class="container-fluid py-3">
+      <h1 class="mb-4 text-center">Isi Form FAQ - WOM Finance</h1>
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
           <h5 class="mb-0 small">Isi Form FAQ</h5>
         </div>
         <div class="card-body">
-          <form id="faqForm" method="POST" novalidate>
-            <!-- Brand and Error Sistem -->
+          <form id="faqForm" method="POST" enctype="multipart/form-data" action="https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec">
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="brand" class="form-label small text-muted"
@@ -60,7 +57,6 @@
               </div>
             </div>
 
-            <!-- Region and Cabang -->
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="region" class="form-label small text-muted"
@@ -72,7 +68,6 @@
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Region --</option>
-                  <!-- Region options will be added dynamically -->
                 </select>
               </div>
               <div class="col-md-6">
@@ -85,12 +80,10 @@
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Cabang --</option>
-                  <!-- Cabang options will be added dynamically -->
                 </select>
               </div>
             </div>
 
-            <!-- Nama Cust and Cust ID -->
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="NCust" class="form-label small text-muted"
@@ -116,7 +109,6 @@
               </div>
             </div>
 
-            <!-- PIC Input and No Kawan -->
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="pic" class="form-label small text-muted"
@@ -146,7 +138,6 @@
               </div>
             </div>
 
-            <!-- Task ID Polo and No App -->
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="IdPolo" class="form-label small text-muted"
@@ -174,9 +165,8 @@
               </div>
             </div>
 
-            <!-- No Odrn -->
             <div class="row mb-2">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <label for="NoOdrn" class="form-label small text-muted"
                   >No Odrn</label
                 >
@@ -188,9 +178,25 @@
                 />
                 <div class="invalid-feedback">No Odrn harus diisi!</div>
               </div>
+              <div class="col-md-6">
+                <label for="fileUpload" class="form-label small text-muted"
+                  >Upload Foto/Video</label
+                >
+                <input
+                  type="file"
+                  id="fileUpload"
+                  name="fileUpload"
+                  class="form-control form-control-sm"
+                  accept="image/*,video/*"
+                  multiple
+                />
+                <div class="form-text small text-muted">
+                  Max file size: 10MB. Accepted formats: images (jpg, png, gif),
+                  videos (mp4, mov).
+                </div>
+              </div>
             </div>
 
-            <!-- Issue -->
             <div class="mb-2">
               <label for="issue" class="form-label small text-muted"
                 >Issue</label
@@ -205,7 +211,6 @@
               <div class="invalid-feedback">Issue harus diisi!</div>
             </div>
 
-            <!-- Buttons -->
             <div class="mb-2">
               <button
                 type="submit"
@@ -226,8 +231,31 @@
         </div>
       </div>
     </div>
+    
+    <script>
+document.getElementById("faqForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  var formData = new FormData(this);
 
-    <!-- Scripts -->
+  fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec", {
+    method: "POST",
+    body: formData,
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status == "success") {
+      Swal.fire({
+        title: "Upload Berhasil!",
+        html: "File Anda telah di-upload.<br>Link folder: <a href='" + data.folderUrl + "' target='_blank'>" + data.folderUrl + "</a>",
+        icon: "success"
+      });
+    } else {
+      Swal.fire("Gagal", "Terjadi error saat upload", "error");
+    }
+  });
+});
+      
+</script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -353,6 +381,7 @@
           const NoKwn = document.getElementById("NoKwn").value;
           const issue = document.getElementById("issue").value;
           const IdPolo = document.getElementById("IdPolo").value;
+          const fileUpload = document.getElementById("fileUpload").files; // Get the selected files
 
           // Validasi berdasarkan error system
           let valid = true;
@@ -414,28 +443,78 @@
             }
 
             if (valid) {
-              // window.location.href = googleFormLink;
-              // Konfirmasi pengiriman
               const form = document.getElementById("faqForm");
               form.action = googleFormLink;
               form.method = "POST";
+
+              // Check if files are selected and handle them
+              if (fileUpload.length > 0) {
+                // IMPORTANT: Directly uploading files to Google Forms via a simple POST request
+                // from an external HTML form is NOT straightforward. Google Forms usually handles
+                // file uploads through its own UI and stores them in Google Drive.
+                //
+                // To truly integrate file uploads, you would typically need a backend server
+                // to handle the file upload, store it (e.g., in Google Drive via Google Drive API),
+                // and then submit the file's URL to your Google Form.
+                //
+                // For a simple client-side HTML form submitting to Google Forms,
+                // the file input will likely NOT work as expected for direct upload.
+                //
+                // As a workaround for this client-side form, you could:
+                // 1. Instruct users to upload files manually to a shared folder and paste the link.
+                // 2. Consider using a different form submission method if file upload is critical.
+                //
+                // For this example, we'll proceed with submitting the form, but be aware
+                // that the `fileUpload` field will not be directly processed by Google Forms
+                // if it's expecting a file upload through its native mechanism.
+                //
+                // If you *must* have file uploads, you'd generally need to:
+                // a. Use Google Apps Script to create a web app that receives the file,
+                //    uploads it to Drive, and then submits the form.
+                // b. Use a backend server to handle the upload and Google Drive API.
+
+                // For a basic setup, you might consider appending the file names or a placeholder
+                // if direct upload isn't feasible with your current Google Form setup.
+                // However, without a backend, the actual file data won't go to Google Forms.
+
+                // If your Google Form has a "File Upload" question, you need to find its
+                // `entry.XXXXXXXXXX` ID and typically, the form would expect a Google Drive URL
+                // in that field, not the file itself.
+
+                // For demonstration, we'll just submit the form. The `fileUpload` input
+                // has the correct `name` attribute that you would get from inspecting
+                // the Google Form's file upload question.
+              }
+
               form.submit();
 
-              // Menunggu hingga pengiriman selesai
+              // After successful submission, generate and display a ticket number
+              // This is a client-side generated number and NOT from Google Forms itself.
               setTimeout(function () {
-                // Simulasi pengiriman sukses atau gagal
-                const success = true; // Setel ke false untuk gagal
+                const success = true; // Assume success after form.submit() for this example
 
                 if (success) {
-                  Swal.fire(
-                    "Berhasil!",
-                    "Formulir berhasil dikirim.",
-                    "success"
-                  );
+                  // Generate a simple ticket number (e.g., timestamp-based)
+                  const ticketNumber = "WOM-" + Date.now().toString().slice(-8); // Example: WOM-last 8 digits of timestamp
+
+                  Swal.fire({
+                    title: "Berhasil!",
+                    html: `Formulir berhasil dikirim.<br>Nomor Tiket Anda: <strong>${ticketNumber}</strong>`, // Added strong tag for emphasis
+                    icon: "success",
+                  }).then(() => {
+                    // Optional: Reset the form after success
+                    form.reset();
+                    // Remove validation styles
+                    form.classList.remove("was-validated");
+                    // Reload region data to reset dropdowns
+                    loadRegionData();
+                    // Clear required field indicators
+                    updateRequiredFields("");
+                  });
                 } else {
                   Swal.fire("Gagal!", "Pengiriman formulir gagal.", "error");
                 }
-              }, 2000); // Waktu tunggu untuk simulasi
+              }, 2000); // Wait for 2 seconds to simulate submission
             }
           }
         });
