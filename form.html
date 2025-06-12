@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>More actions
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -26,14 +26,14 @@
           <h5 class="mb-0 small">Isi Form FAQ</h5>
         </div>
         <div class="card-body">
-          <form id="faqForm" method="POST" enctype="multipart/form-data" action="https://docs.google.com/forms/d/e/1FAIpQLSd4QnQuXr5LnkGxuUAFz42uF8J5VcjsDgmoRKKEe_iklgjKOQ/formResponse">
+          <form id="faqForm" method="POST" enctype="multipart/form-data">
 
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="brand" class="form-label small text-muted"
                   >Brand</label
                 >
-                <select id="brand" class="form-select form-select-sm" required>
+                <select id="brand" name="entry.2005620554" class="form-select form-select-sm" required>
                   <option value="">-- Pilih Brand --</option>
                   <option value="nb">Reguler</option>
                   <option value="mas">MasKu</option>
@@ -48,7 +48,7 @@
                 >
                 <select
                   id="errorSystem"
-                  name="entry.2005620554"
+                  name="entry.1045781291"
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Error Sistem --</option>
@@ -58,7 +58,7 @@
                   <option value="login">Login</option>
                 </select>
               </div>
-            </div>yyyyyy
+            </div>
             <div class="row mb-2">
               <div class="col-md-6">
                 <label for="region" class="form-label small text-muted"
@@ -66,7 +66,7 @@
                 >
                 <select
                   id="region"
-                  name="entry.1045781291"
+                  name="entry.839337160"
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Region --</option>
@@ -79,7 +79,7 @@
                 >
                 <select
                   id="cabang"
-                  name="entry.839337160"
+                  name="entry.1065046570"
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Cabang --</option>
@@ -95,7 +95,7 @@
                 <input
                   type="text"
                   id="NCust"
-                  name="entry.1065046570"
+                  name="entry.1166974658"
                   class="form-control form-control-sm"
                 />
               </div>
@@ -106,7 +106,7 @@
                 <input
                   type="text"
                   id="IdCust"
-                  name="entry.1166974658"
+                  name="entry.1972370246"
                   class="form-control form-control-sm"
                 />
               </div>
@@ -119,7 +119,7 @@
                 <input
                   type="text"
                   id="pic"
-                  name="entry.1972370246"
+                  name="entry.1234567890"
                   class="form-control form-control-sm"
                   required
                 />
@@ -132,7 +132,7 @@
                 <input
                   type="text"
                   id="NoKwn"
-                  name="entry.1234567890"
+                  name="entry.9876543210"
                   class="form-control form-control-sm"
                   required
                 />
@@ -147,7 +147,7 @@
                 <input
                   type="text"
                   id="IdPolo"
-                  name="entry.9876543210"
+                  name="entry.1122334455"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">Task ID Polo harus diisi!</div>
@@ -159,7 +159,7 @@
                 <input
                   type="text"
                   id="NoApp"
-                  name="entry.1122334455"
+                  name="entry.5544332211"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">No APP harus diisi!</div>
@@ -173,7 +173,7 @@
                 <input
                   type="text"
                   id="NoOdrn"
-                  name="entry.5544332211"
+                  name="entry.6677889900"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">No Odrn harus diisi!</div>
@@ -185,7 +185,7 @@
                 <input
                   type="file"
                   id="fileUpload"
-                  name="fileUpload"
+                  name="entry.2005620554"
                   class="form-control form-control-sm"
                   accept="image/*,video/*"
                   multiple
@@ -202,7 +202,7 @@
               >
               <textarea
                 id="issue"
-                name="entry.6677889900"
+                name="entry.2005620554"
                 class="form-control form-control-sm"
                 rows="5"
                 required
@@ -237,23 +237,66 @@ document.getElementById("faqForm").addEventListener("submit", function(e) {
   e.preventDefault();
   var formData = new FormData(this);
 
-  fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec", {
+  // First, handle file upload to Google Drive
+  const fileUpload = document.getElementById("fileUpload").files;
+  if (fileUpload.length > 0) {
+    // Upload files to Google Drive
+    fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec", {
+      method: "POST",
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === "success") {
+        // After successful file upload, submit form data to Google Form
+        submitFormData(formData, data.folderUrl);
+      } else {
+        Swal.fire("Error", "Gagal mengupload file", "error");
+      }
+    })
+    .catch(error => {
+      console.error("Error uploading files:", error);
+      Swal.fire("Error", "Terjadi kesalahan saat mengupload file", "error");
+    });
+  } else {
+    // If no files to upload, just submit the form data
+    submitFormData(formData);
+  }
+});
+
+function submitFormData(formData, folderUrl = "") {
+  // Add folder URL to form data if available
+  if (folderUrl) {
+    formData.append("entry.2005620554", folderUrl); // File URL field
+  }
+
+  // Submit to Google Form
+  fetch("https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse", {
     method: "POST",
     body: formData,
+    mode: "no-cors"
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.status == "success") {
-      Swal.fire({
-        title: "Upload Berhasil!",
-        html: "File Anda telah di-upload.<br>Link folder: <a href='" + data.folderUrl + "' target='_blank'>" + data.folderUrl + "</a>",
-        icon: "success"
-      });
-    } else {
-      Swal.fire("Gagal", "Terjadi error saat upload", "error");
-    }
+  .then(() => {
+    // Generate ticket number
+    const ticketNumber = "WOM-" + Date.now().toString().slice(-8);
+    
+    Swal.fire({
+      title: "Berhasil!",
+      html: `Formulir berhasil dikirim.<br>Nomor Tiket Anda: <strong>${ticketNumber}</strong>`,
+      icon: "success"
+    }).then(() => {
+      // Reset form
+      document.getElementById("faqForm").reset();
+      document.getElementById("faqForm").classList.remove("was-validated");
+      loadRegionData();
+      updateRequiredFields("");
+    });
+  })
+  .catch(error => {
+    console.error("Error submitting form:", error);
+    Swal.fire("Error", "Terjadi kesalahan saat mengirim formulir", "error");
   });
-});
+}
       
 </script>
     <script
