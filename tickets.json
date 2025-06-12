@@ -1,0 +1,16 @@
+{
+  "tickets": [
+    {
+      "id": "WOM-00000001",
+      "used": false
+    },
+    {
+      "id": "WOM-00000002",
+      "used": false
+    },
+    {
+      "id": "WOM-00000003",
+      "used": false
+    }
+  ]
+} 
