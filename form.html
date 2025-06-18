@@ -233,33 +233,53 @@
     </div>
     
     <script>
-document.getElementById("faqForm").addEventListener("submit", function(e) {
+document.getElementById("faqForm").addEventListener("submit", async function(e) {
   e.preventDefault();
   var formData = new FormData(this);
 
-  // First, handle file upload to Google Drive
-  const fileUpload = document.getElementById("fileUpload").files;
-  if (fileUpload.length > 0) {
-    // Upload files to Google Drive
-    fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbydQMms0S1Nh_C-8XOs7LxoLZkeC8G6Ev05kSRqmdTcRV3_bY69XC8VqpwPrZZV-CIhPg/exec", {
-      method: "POST",
-      body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.status === "success") {
-        // After successful file upload, submit form data to Google Form
-        submitFormData(formData, data.folderUrl);
-      } else {
-        Swal.fire("Error", "Gagal mengupload file", "error");
-      }
-    })
-    .catch(error => {
-      console.error("Error uploading files:", error);
-      Swal.fire("Error", "Terjadi kesalahan saat mengupload file", "error");
+  const fileInput = document.getElementById("fileUpload");
+  const files = fileInput.files;
+
+  if (files.length > 0) {
+    // Hanya upload file pertama (imgbb hanya support satu file per request)
+    const file = files[0];
+    const imgbbApiKey = "134b6e61ce84b19617ae2bf7876ad444";
+    const imgbbUrl = `https://api.imgbb.com/1/upload?expiration=600&key=${imgbbApiKey}`;
+
+    // Convert file to base64
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = error => reject(error);
     });
+
+    try {
+      const base64Image = await toBase64(file);
+
+      const imgbbForm = new FormData();
+      imgbbForm.append("image", base64Image);
+
+      const response = await fetch(imgbbUrl, {
+        method: "POST",
+        body: imgbbForm
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        // Masukkan URL gambar ke field Issue atau field lain
+        formData.append("entry.2005620554", data.data.url);
+
+        // Submit ke Google Form
+        submitFormData(formData);
+      } else {
+        Swal.fire("Error", "Gagal mengupload file ke imgbb", "error");
+      }
+    } catch (error) {
+      Swal.fire("Error", "Terjadi kesalahan saat upload file", "error");
+    }
   } else {
-    // If no files to upload, just submit the form data
+    // Jika tidak ada file, submit form seperti biasa
     submitFormData(formData);
   }
 });
