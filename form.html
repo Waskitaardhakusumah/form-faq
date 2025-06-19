@@ -147,7 +147,7 @@
                 <input
                   type="text"
                   id="IdPolo"
-                  name="entry.915304343"
+                  name="entry.1122334455"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">Task ID Polo harus diisi!</div>
@@ -159,7 +159,7 @@
                 <input
                   type="text"
                   id="NoApp"
-                  name="entry.1870465535"
+                  name="entry.5544332211"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">No APP harus diisi!</div>
@@ -173,7 +173,7 @@
                 <input
                   type="text"
                   id="NoOdrn"
-                  name="entry.751992806"
+                  name="entry.6677889900"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">No Odrn harus diisi!</div>
@@ -202,7 +202,7 @@
               >
               <textarea
                 id="issue"
-                name="entry.420799577"
+                name="entry.2005620554"
                 class="form-control form-control-sm"
                 rows="5"
                 required
@@ -233,6 +233,8 @@
     </div>
     
     <script>
+// Kembalikan event listener submit ke versi submit langsung tanpa upload ke imgbb
+
 document.getElementById("faqForm").addEventListener("submit", async function(e) {
   e.preventDefault();
   var formData = new FormData(this);
@@ -241,74 +243,48 @@ document.getElementById("faqForm").addEventListener("submit", async function(e) 
   const files = fileInput.files;
 
   if (files.length > 0) {
-    // Hanya upload file pertama (imgbb hanya support satu file per request)
     const file = files[0];
-    const imgbbApiKey = "134b6e61ce84b19617ae2bf7876ad444";
-    const imgbbUrl = `https://api.imgbb.com/1/upload?expiration=600&key=${imgbbApiKey}`;
-
-    // Convert file to base64
-    const toBase64 = file => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = error => reject(error);
-    });
+    const uploadData = new FormData();
+    uploadData.append("file", file);
 
     try {
-      const base64Image = await toBase64(file);
-
-      const imgbbForm = new FormData();
-      imgbbForm.append("image", base64Image);
-
-      const response = await fetch(imgbbUrl, {
+      const response = await fetch("/upload", {
         method: "POST",
-        body: imgbbForm
+        body: uploadData
       });
-      const data = await response.json();
+      const result = await response.json();
 
-      if (data.success) {
-        // Masukkan URL gambar ke field Issue atau field lain
-        formData.append("entry.2005620554", data.data.url);
-
-        // Submit ke Google Form
+      if (result.status === "success") {
+        // Masukkan link ke field Google Form
+        formData.append("entry.1343263162", window.location.origin + result.url);
         submitFormData(formData);
-        // console.log(formData);
-        // console.log(formData);
-        console.log(`Form Data : ${formData}`);
       } else {
-        Swal.fire("Error", "Gagal mengupload file ke imgbb", "error");
+        Swal.fire("Error", "Gagal upload file: " + result.message, "error");
       }
     } catch (error) {
       Swal.fire("Error", "Terjadi kesalahan saat upload file", "error");
     }
   } else {
-    // Jika tidak ada file, submit form seperti biasa
     submitFormData(formData);
   }
 });
 
 function submitFormData(formData, folderUrl = "") {
-  // Add folder URL to form data if available
   if (folderUrl) {
-    formData.append("entry.2005620554", folderUrl); // File URL field
+    formData.append("entry.2005620554", folderUrl); // (opsional, jika ingin field lain)
   }
-
-  // Submit to Google Form
   fetch("https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse", {
     method: "POST",
     body: formData,
     mode: "no-cors"
   })
   .then(() => {
-    // Generate ticket number
     const ticketNumber = "WOM-" + Date.now().toString().slice(-8);
-    
     Swal.fire({
       title: "Berhasil!",
       html: `Formulir berhasil dikirim.<br>Nomor Tiket Anda: <strong>${ticketNumber}</strong>`,
       icon: "success"
     }).then(() => {
-      // Reset form
       document.getElementById("faqForm").reset();
       document.getElementById("faqForm").classList.remove("was-validated");
       loadRegionData();
