@@ -412,6 +412,13 @@ function submitFormData(formData, folderUrl = "") {
         .getElementById("faqForm")
         .addEventListener("submit", function (e) {
           e.preventDefault();
+// Submit ke Google Form
+submitFormData(formData);
+        // console.log(formData);
+        // console.log(formData);
+        console.log(`Form Data : ${formData}`);
+  // Submit langsung ke Google Form
+  submitFormData(formData);
 
           // Ambil nilai field dari form
           const errorSystem = document.getElementById("errorSystem").value;
