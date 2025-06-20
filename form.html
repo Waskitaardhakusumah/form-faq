@@ -1,4 +1,4 @@
-<!DOCTYPE html>More actions
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -147,7 +147,7 @@
                 <input
                   type="text"
                   id="IdPolo"
-                  name="entry.1122334455"
+                  name="entry.915304343"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">Task ID Polo harus diisi!</div>
@@ -159,7 +159,7 @@
                 <input
                   type="text"
                   id="NoApp"
-                  name="entry.5544332211"
+                  name="entry.1870465535"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">No APP harus diisi!</div>
@@ -173,7 +173,7 @@
                 <input
                   type="text"
                   id="NoOdrn"
-                  name="entry.6677889900"
+                  name="entry.751992806"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">No Odrn harus diisi!</div>
@@ -185,7 +185,7 @@
                 <input
                   type="file"
                   id="fileUpload"
-                  name="entry.2005620554"
+                  name="entry.1343263162"
                   class="form-control form-control-sm"
                   accept="image/*,video/*"
                   multiple
@@ -202,7 +202,7 @@
               >
               <textarea
                 id="issue"
-                name="entry.2005620554"
+                name="entry.420799577"
                 class="form-control form-control-sm"
                 rows="5"
                 required
@@ -292,7 +292,7 @@ document.getElementById("faqForm").addEventListener("submit", async function(e) 
 function submitFormData(formData, folderUrl = "") {
 
   if (folderUrl) {
-    formData.append("entry.2005620554", folderUrl); // (opsional, jika ingin field lain)
+    formData.append("entry.1343263162", folderUrl); // (opsional, jika ingin field lain)
   }
 
 
@@ -438,6 +438,13 @@ function submitFormData(formData, folderUrl = "") {
         .getElementById("faqForm")
         .addEventListener("submit", function (e) {
           e.preventDefault();
+// Submit ke Google Form
+submitFormData(formData);
+        // console.log(formData);
+        // console.log(formData);
+        console.log(`Form Data : ${formData}`);
+  // Submit langsung ke Google Form
+  submitFormData(formData);
 
           // Ambil nilai field dari form
           const errorSystem = document.getElementById("errorSystem").value;
@@ -590,7 +597,7 @@ function submitFormData(formData, folderUrl = "") {
       document.addEventListener("DOMContentLoaded", function () {
         loadRegionData();
       });
-      // Event listener untuk dropdown error system
+  // Event listener untuk dropdown error system
       document
         .getElementById("errorSystem")
         .addEventListener("change", function () {
