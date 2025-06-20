@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>More actions
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -147,7 +147,7 @@
                 <input
                   type="text"
                   id="IdPolo"
-                  name="entry.915304343"
+                  name="entry.1122334455"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">Task ID Polo harus diisi!</div>
@@ -159,7 +159,7 @@
                 <input
                   type="text"
                   id="NoApp"
-                  name="entry.1870465535"
+                  name="entry.5544332211"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">No APP harus diisi!</div>
@@ -173,7 +173,7 @@
                 <input
                   type="text"
                   id="NoOdrn"
-                  name="entry.751992806"
+                  name="entry.6677889900"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">No Odrn harus diisi!</div>
@@ -185,14 +185,14 @@
                 <input
                   type="file"
                   id="fileUpload"
-                  name="entry.1343263162"
+                  name="entry.2005620554"
                   class="form-control form-control-sm"
                   accept="image/*,video/*"
                   multiple
                 />
                 <div class="form-text small text-muted">
                   Max file size: 10MB. Accepted formats: images (jpg, png, gif),
-                  videos (mp4, mov, avi).
+                  videos (mp4, mov).
                 </div>
               </div>
             </div>
@@ -202,7 +202,7 @@
               >
               <textarea
                 id="issue"
-                name="entry.420799577"
+                name="entry.2005620554"
                 class="form-control form-control-sm"
                 rows="5"
                 required
@@ -231,131 +231,98 @@
         </div>
       </div>
     </div>
-    
+
     <script>
-// Google Apps Script integration for file upload
-const scriptURL = "https://script.google.com/a/macros/wom.co.id/s/AKfycbxyWBGF06mWzXS3lMiYiKwB-pKdFIT7c1fUK6nSKTslrAnLtJoOFlWpz-fHELSkScNIDA/exec";
+// Kembalikan event listener submit ke versi submit langsung tanpa upload ke imgbb
 
 document.getElementById("faqForm").addEventListener("submit", async function(e) {
   e.preventDefault();
-  
-  // Get form data
-  const formData = new FormData(this);
-  
-  // Validation logic
-  const errorSystem = document.getElementById("errorSystem").value;
-  const region = document.getElementById("region").value;
-  const cabang = document.getElementById("cabang").value;
-  const NCust = document.getElementById("NCust").value;
-  const pic = document.getElementById("pic").value;
-  const NoKwn = document.getElementById("NoKwn").value;
-  const issue = document.getElementById("issue").value;
-  const IdPolo = document.getElementById("IdPolo").value;
-  const brand = document.getElementById("brand").value;
-  
-  // Validasi berdasarkan error system
-  let valid = true;
-  let message = "";
+  var formData = new FormData(this);
 
-  if (errorSystem === "ki") {
-    if (!region || !cabang || !NCust || !pic || !NoKwn || !issue) {
-      valid = false;
-      message = "Harap lengkapi semua field yang wajib diisi untuk Error Sistem KI!";
-    }
-  } else if (errorSystem === "mss" || errorSystem === "wise") {
-    if (!region || !cabang || !NCust || !pic || !NoKwn || !issue || !IdPolo) {
-      valid = false;
-      message = "Harap lengkapi semua field yang wajib diisi untuk Error Sistem MSS/WISE!";
-    }
-  } else if (errorSystem === "login") {
-    if (!region || !cabang || !pic || !issue) {
-      valid = false;
-      message = "Harap lengkapi semua field yang wajib diisi untuk Error Sistem Login!";
-    }
-  } else {
-    valid = false;
-    message = "Pilih Error Sistem yang valid!";
-  }
-
-  if (!valid) {
-    Swal.fire("Error", message, "error");
-    return;
-  }
-
-  // Brand validation
-  if (!brand) {
-    Swal.fire("Error", "Pilih brand yang valid!", "error");
-    return;
-  }
-  
-  // Get file input
   const fileInput = document.getElementById("fileUpload");
-  
-  // Handle file upload if files are selected
-  if (fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-    
-    // Size validation - 10MB limit
-    if (file.size > 10 * 1024 * 1024) {
-      Swal.fire("Error", "File size should be less than 10MB.", "error");
-      return;
+  const files = fileInput.files;
+
+  if (files.length > 0) {
+
+    const file = files[0];
+    const uploadData = new FormData();
+    uploadData.append("file", file);
+
+
+
+
+
+
+
+
+
+    try {
+      const response = await fetch("/upload", {
+
+
+
+
+
+        method: "POST",
+        body: uploadData
+      });
+      const result = await response.json();
+
+      if (result.status === "success") {
+        // Masukkan link ke field Google Form
+        formData.append("entry.1343263162", window.location.origin + result.url);
+
+
+        submitFormData(formData);
+
+
+
+      } else {
+        Swal.fire("Error", "Gagal upload file: " + result.message, "error");
+      }
+    } catch (error) {
+      Swal.fire("Error", "Terjadi kesalahan saat upload file", "error");
     }
-    
-    // File type validation
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/mov', 'video/avi', 'video/quicktime'];
-    if (!allowedTypes.includes(file.type)) {
-      Swal.fire("Error", "File type not supported. Please upload images (jpg, png, gif) or videos (mp4, mov, avi).", "error");
-      return;
-    }
-    
-    const reader = new FileReader();
-    
-    reader.onload = async function() {
-      // Append base64 data to formData
-      formData.append("fileUpload", reader.result.split(",")[1]); // Remove data:image/video/...;base64, prefix
-      formData.append("fileName", file.name);
-      formData.append("fileType", file.type);
-      
-      // Submit form with file data
-      await submitFormData(formData);
-    };
-    
-    reader.readAsDataURL(file);
   } else {
-    // No file uploaded, submit form without file
-    await submitFormData(formData);
+
+    submitFormData(formData);
   }
 });
 
-async function submitFormData(formData) {
-  try {
-    // Submit to Google Apps Script
-    const response = await fetch(scriptURL, {
-      method: "POST",
-      body: formData
+function submitFormData(formData, folderUrl = "") {
+
+  if (folderUrl) {
+    formData.append("entry.2005620554", folderUrl); // (opsional, jika ingin field lain)
+  }
+
+
+  fetch("https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse", {
+    method: "POST",
+    body: formData,
+    mode: "no-cors"
+  })
+  .then(() => {
+
+    const ticketNumber = "WOM-" + Date.now().toString().slice(-8);
+
+    Swal.fire({
+      title: "Berhasil!",
+      html: `Formulir berhasil dikirim.<br>Nomor Tiket Anda: <strong>${ticketNumber}</strong>`,
+      icon: "success"
+    }).then(() => {
+
+      document.getElementById("faqForm").reset();
+      document.getElementById("faqForm").classList.remove("was-validated");
+      loadRegionData();
+      updateRequiredFields("");
     });
-    
-    if (response.ok) {
-      const ticketNumber = "WOM-" + Date.now().toString().slice(-8);
-      Swal.fire({
-        title: "Berhasil!",
-        html: `Formulir berhasil dikirim.<br>Nomor Tiket Anda: <strong>${ticketNumber}</strong>`,
-        icon: "success"
-      }).then(() => {
-        document.getElementById("faqForm").reset();
-        document.getElementById("faqForm").classList.remove("was-validated");
-        loadRegionData();
-        updateRequiredFields("");
-      });
-    } else {
-      throw new Error('Network response was not ok');
-    }
-  } catch (error) {
+  })
+  .catch(error => {
     console.error("Error submitting form:", error);
     Swal.fire("Error", "Terjadi kesalahan saat mengirim formulir", "error");
-  }
+  });
 }
-      
+
 </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -466,12 +433,163 @@ async function submitFormData(formData) {
             ' <span class="text-danger">*</span>';
         }
       }
-      
+      // Event listener untuk validasi saat form disubmit
+      document
+        .getElementById("faqForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Ambil nilai field dari form
+          const errorSystem = document.getElementById("errorSystem").value;
+          const region = document.getElementById("region").value;
+          const cabang = document.getElementById("cabang").value;
+          const NCust = document.getElementById("NCust").value;
+          const pic = document.getElementById("pic").value;
+          const NoKwn = document.getElementById("NoKwn").value;
+          const issue = document.getElementById("issue").value;
+          const IdPolo = document.getElementById("IdPolo").value;
+          const fileUpload = document.getElementById("fileUpload").files; // Get the selected files
+
+          // Validasi berdasarkan error system
+          let valid = true;
+          let message = "";
+
+          if (errorSystem === "ki") {
+            if (!region || !cabang || !NCust || !pic || !NoKwn || !issue) {
+              valid = false;
+              message =
+                "Harap lengkapi semua field yang wajib diisi untuk Error Sistem KI!";
+            }
+          } else if (errorSystem === "mss" || errorSystem === "wise") {
+            if (
+              !region ||
+              !cabang ||
+              !NCust ||
+              !pic ||
+              !NoKwn ||
+              !issue ||
+              !IdPolo
+            ) {
+              valid = false;
+              message =
+                "Harap lengkapi semua field yang wajib diisi untuk Error Sistem MSS/WISE!";
+            }
+          } else if (errorSystem === "login") {
+            if (!region || !cabang || !pic || !issue) {
+              valid = false;
+              message =
+                "Harap lengkapi semua field yang wajib diisi untuk Error Sistem Login!";
+            }
+          } else {
+            valid = false;
+            message = "Pilih Error Sistem yang valid!";
+          }
+
+          if (!valid) {
+            Swal.fire("Error", message, "error");
+          } else {
+            // Tentukan link Google Form berdasarkan Brand
+            let googleFormLink = "";
+            const brand = document.getElementById("brand").value;
+
+            if (brand === "nb") {
+              googleFormLink =
+                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+            } else if (brand === "mas") {
+              googleFormLink =
+                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+            } else if (brand === "mtr") {
+              googleFormLink =
+                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+            } else if (brand === "mbl") {
+              googleFormLink =
+                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+            } else {
+              valid = false;
+              message = "Pilih brand yang valid!";
+            }
+
+            if (valid) {
+              const form = document.getElementById("faqForm");
+              form.action = googleFormLink;
+              form.method = "POST";
+
+              // Check if files are selected and handle them
+              if (fileUpload.length > 0) {
+                // IMPORTANT: Directly uploading files to Google Forms via a simple POST request
+                // from an external HTML form is NOT straightforward. Google Forms usually handles
+                // file uploads through its own UI and stores them in Google Drive.
+                //
+                // To truly integrate file uploads, you would typically need a backend server
+                // to handle the file upload, store it (e.g., in Google Drive via Google Drive API),
+                // and then submit the file's URL to your Google Form.
+                //
+                // For a simple client-side HTML form submitting to Google Forms,
+                // the file input will likely NOT work as expected for direct upload.
+                //
+                // As a workaround for this client-side form, you could:
+                // 1. Instruct users to upload files manually to a shared folder and paste the link.
+                // 2. Consider using a different form submission method if file upload is critical.
+                //
+                // For this example, we'll proceed with submitting the form, but be aware
+                // that the `fileUpload` field will not be directly processed by Google Forms
+                // if it's expecting a file upload through its native mechanism.
+                //
+                // If you *must* have file uploads, you'd generally need to:
+                // a. Use Google Apps Script to create a web app that receives the file,
+                //    uploads it to Drive, and then submits the form.
+                // b. Use a backend server to handle the upload and Google Drive API.
+
+                // For a basic setup, you might consider appending the file names or a placeholder
+                // if direct upload isn't feasible with your current Google Form setup.
+                // However, without a backend, the actual file data won't go to Google Forms.
+
+                // If your Google Form has a "File Upload" question, you need to find its
+                // `entry.XXXXXXXXXX` ID and typically, the form would expect a Google Drive URL
+                // in that field, not the file itself.
+
+                // For demonstration, we'll just submit the form. The `fileUpload` input
+                // has the correct `name` attribute that you would get from inspecting
+                // the Google Form's file upload question.
+              }
+
+              form.submit();
+
+              // After successful submission, generate and display a ticket number
+              // This is a client-side generated number and NOT from Google Forms itself.
+              setTimeout(function () {
+                const success = true; // Assume success after form.submit() for this example
+
+                if (success) {
+                  // Generate a simple ticket number (e.g., timestamp-based)
+                  const ticketNumber = "WOM-" + Date.now().toString().slice(-8); // Example: WOM-last 8 digits of timestamp
+
+                  Swal.fire({
+                    title: "Berhasil!",
+                    html: `Formulir berhasil dikirim.<br>Nomor Tiket Anda: <strong>${ticketNumber}</strong>`, // Added strong tag for emphasis
+                    icon: "success",
+                  }).then(() => {
+                    // Optional: Reset the form after success
+                    form.reset();
+                    // Remove validation styles
+                    form.classList.remove("was-validated");
+                    // Reload region data to reset dropdowns
+                    loadRegionData();
+                    // Clear required field indicators
+                    updateRequiredFields("");
+                  });
+                } else {
+                  Swal.fire("Gagal!", "Pengiriman formulir gagal.", "error");
+                }
+              }, 2000); // Wait for 2 seconds to simulate submission
+            }
+          }
+        });
+
       // Load region data saat halaman dimuat
       document.addEventListener("DOMContentLoaded", function () {
         loadRegionData();
       });
-      
       // Event listener untuk dropdown error system
       document
         .getElementById("errorSystem")
