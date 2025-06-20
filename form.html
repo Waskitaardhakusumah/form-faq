@@ -241,84 +241,83 @@ document.getElementById("faqForm").addEventListener("submit", async function(e) 
   const files = fileInput.files;
 
   if (files.length > 0) {
-    // Hanya upload file pertama (imgbb hanya support satu file per request)
-    const file = files[0];
-    const imgbbApiKey = "134b6e61ce84b19617ae2bf7876ad444";
-    const imgbbUrl = `https://api.imgbb.com/1/upload?expiration=600&key=${imgbbApiKey}`;
 
-    // Convert file to base64
-    const toBase64 = file => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = error => reject(error);
-    });
+    const file = files[0];
+    const uploadData = new FormData();
+    uploadData.append("file", file);
+
+
+
+
+
+
+
+
 
     try {
-      const base64Image = await toBase64(file);
+      const response = await fetch("/upload", {
 
-      const imgbbForm = new FormData();
-      imgbbForm.append("image", base64Image);
 
-      const response = await fetch(imgbbUrl, {
+
+
+
         method: "POST",
         body: imgbbForm
       });
-      const data = await response.json();
+      const result = await response.json();
 
-      if (data.success) {
-        // Masukkan URL gambar ke field Issue atau field lain
-        formData.append("entry.2005620554", data.data.url);
+      if (result.status === "success") {
+        // Masukkan link ke field Google Form
+        formData.append("entry.1343263162", window.location.origin + result.url);
 
-        // Submit ke Google Form
+
         submitFormData(formData);
-        // console.log(formData);
-        // console.log(formData);
-        console.log(`Form Data : ${formData}`);
+
+
+
       } else {
         Swal.fire("Error", "Gagal mengupload file ke imgbb", "error");
       }
     } catch (error) {
+      console.log("Upload error:", error);
       Swal.fire("Error", "Terjadi kesalahan saat upload file", "error");
     }
   } else {
-    // Jika tidak ada file, submit form seperti biasa
+
     submitFormData(formData);
   }
 });
 
 function submitFormData(formData, folderUrl = "") {
-  // Add folder URL to form data if available
+
   if (folderUrl) {
-    formData.append("entry.2005620554", folderUrl); // File URL field
+    formData.append("entry.1343263162", folderUrl); // (opsional, jika ingin field lain)
   }
 
-  // Submit to Google Form
+
   fetch("https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse", {
     method: "POST",
     body: formData,
     mode: "no-cors"
   })
   .then(() => {
-    // Generate ticket number
-    const ticketNumber = "WOM-" + Date.now().toString().slice(-8);
 
+    const ticketNumber = "WOM-" + Date.now().toString().slice(-8);
     Swal.fire({
       title: "Berhasil!",
       html: `Formulir berhasil dikirim.<br>Nomor Tiket Anda: <strong>${ticketNumber}</strong>`,
       icon: "success"
     }).then(() => {
-      // Reset form
+
       document.getElementById("faqForm").reset();
       document.getElementById("faqForm").classList.remove("was-validated");
       loadRegionData();
       updateRequiredFields("");
     });
-  })
-  .catch(error => {
-    console.error("Error submitting form:", error);
+  } catch (error) {
+    console.log("Apps Script error:", error);
     Swal.fire("Error", "Terjadi kesalahan saat mengirim formulir", "error");
-  });
+  }
 }
 
 </script>
