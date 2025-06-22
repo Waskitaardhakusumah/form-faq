@@ -235,11 +235,59 @@
     <script>
 document.getElementById("faqForm").addEventListener("submit", async function(e) {
   e.preventDefault();
-  var formData = new FormData(this);
-
   const fileInput = document.getElementById("fileUpload");
-  const files = fileInput.files;
+  const fileUpload = fileInput.files;
 
+<<<<<<< HEAD
+  let fileUrl = "";
+
+  if (fileUpload.length > 0) {
+    const file = fileUpload[0];
+    const reader = new FileReader();
+
+    reader.onload = async function() {
+      const base64Data = reader.result.split(',')[1];
+
+      const payload = new FormData();
+      payload.append("file", base64Data);
+      payload.append("filename", file.name);
+      payload.append("mimeType", file.type);
+
+      try {
+        const response = await fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbzcnC0RGpuPfgR9mpaDrhROWLqGmQP16Z8rHt2JtRSq/dev", {
+          method: "POST",
+          body: payload
+        });
+        const result = await response.json();
+        if (result.status === "success") {
+          fileUrl = result.url;
+        } else {
+          Swal.fire("Upload Gagal", "File gagal diupload ke Google Drive", "error");
+          return;
+        }
+
+        // Setelah upload berhasil, submit form Google Form
+        const formData = new FormData(document.getElementById("faqForm"));
+        formData.append("entry.1343263162", fileUrl); // Ganti dengan entry ID yang sesuai di Google Form
+        await fetch(document.getElementById("faqForm").action, {
+          method: "POST",
+          mode: "no-cors",
+          body: formData,
+        });
+
+        Swal.fire("Berhasil!", "Formulir berhasil dikirim", "success");
+        document.getElementById("faqForm").reset();
+
+      } catch (error) {
+        console.error(error);
+        Swal.fire("Error", "Terjadi kesalahan saat mengirim formulir", "error");
+      }
+    };
+
+    reader.readAsDataURL(file);
+  } else {
+    Swal.fire("Error", "Silakan upload file terlebih dahulu!", "error");
+=======
   if (files.length > 0) {
 
     const file = files[0];
@@ -307,6 +355,7 @@ reader.readAsDataURL(file);
   } else {
 
     submitFormData(formData);
+>>>>>>> b18a903959fcc97624427953867a49460fcf8c18
   }
 });
 
@@ -342,280 +391,258 @@ function submitFormData(formData, folderUrl = "") {
   }
 }
 
-</script>
+// Ambil data dari file region.json dan isi dropdown
+// Fungsi untuk memuat dropdown Region dan Cabang
+function loadRegionData() {
+  fetch("region.json") // Pastikan path JSON sesuai dengan lokasi file Anda
+    .then((response) => response.json())
+    .then((data) => {
+      // Dapatkan elemen select untuk region dan cabang
+      const regionSelect = document.getElementById("region");
+      const cabangSelect = document.getElementById("cabang");
+
+      // Clear existing options
+      regionSelect.innerHTML =
+        '<option value="">-- Pilih Region --</option>';
+      cabangSelect.innerHTML =
+        '<option value="">-- Pilih Cabang --</option>';
+
+      // Menambahkan option untuk region
+      const regions = [...new Set(data.map((item) => item.REGION_NAME))]; // Mengambil region yang unik
+      regions.forEach((region) => {
+        const option = document.createElement("option");
+        option.value = region;
+        option.textContent = region;
+        regionSelect.appendChild(option);
+      });
+
+      // Menambahkan event listener untuk mengubah cabang saat region dipilih
+      regionSelect.addEventListener("change", function () {
+        const selectedRegion = regionSelect.value;
+        if (selectedRegion) {
+          // Menampilkan cabang berdasarkan region yang dipilih
+          const filteredCabangs = data.filter(
+            (item) => item.REGION_NAME === selectedRegion
+          );
+          cabangSelect.innerHTML =
+            '<option value="">-- Pilih Cabang --</option>'; // Clear existing options
+          filteredCabangs.forEach((item) => {
+            const option = document.createElement("option");
+            option.value = item.COMP_OFFICE_NAME;
+            option.textContent = item.COMP_OFFICE_NAME;
+            cabangSelect.appendChild(option);
+          });
+        }
+      });
+    })
+    .catch((error) => {
+      console.error("Error fetching region data:", error);
+    });
+}
+
+// Fungsi untuk validasi dan set required fields
+function updateRequiredFields(errorSystem) {
+  // Hapus tanda '*' dari semua label sebelum menambahkan yang baru
+  const labels = document.querySelectorAll("label");
+  labels.forEach((label) => {
+    const star = label.querySelector(".text-danger");
+    if (star) {
+      star.remove();
+    }
+  });
+
+  // Menambahkan tanda '*' sesuai dengan pilihan errorSystem
+  if (errorSystem === "ki") {
+    document.querySelector('label[for="region"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="cabang"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="brand"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="NCust"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="pic"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="NoKwn"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="issue"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+  } else if (errorSystem === "mss" || errorSystem === "wise") {
+    document.querySelector('label[for="region"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="cabang"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="NCust"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="pic"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="NoKwn"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="issue"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="IdPolo"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+  } else if (errorSystem === "login") {
+    document.querySelector('label[for="region"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="cabang"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="pic"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+    document.querySelector('label[for="issue"]').innerHTML +=
+      ' <span class="text-danger">*</span>';
+  }
+}
+// Event listener untuk validasi saat form disubmit
+document
+  .getElementById("faqForm")
+  .addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    // Ambil nilai field dari form
+    const errorSystem = document.getElementById("errorSystem").value;
+    const region = document.getElementById("region").value;
+    const cabang = document.getElementById("cabang").value;
+    const NCust = document.getElementById("NCust").value;
+    const pic = document.getElementById("pic").value;
+    const NoKwn = document.getElementById("NoKwn").value;
+    const issue = document.getElementById("issue").value;
+    const IdPolo = document.getElementById("IdPolo").value;
+    const fileUpload = document.getElementById("fileUpload").files;
+
+    // Validasi berdasarkan error system
+    let valid = true;
+    let message = "";
+
+    if (errorSystem === "ki") {
+      if (!region || !cabang || !NCust || !pic || !NoKwn || !issue) {
+        valid = false;
+        message =
+          "Harap lengkapi semua field yang wajib diisi untuk Error Sistem KI!";
+      }
+    } else if (errorSystem === "mss" || errorSystem === "wise") {
+      if (
+        !region ||
+        !cabang ||
+        !NCust ||
+        !pic ||
+        !NoKwn ||
+        !issue ||
+        !IdPolo
+      ) {
+        valid = false;
+        message =
+          "Harap lengkapi semua field yang wajib diisi untuk Error Sistem MSS/WISE!";
+      }
+    } else if (errorSystem === "login") {
+      if (!region || !cabang || !pic || !issue) {
+        valid = false;
+        message =
+          "Harap lengkapi semua field yang wajib diisi untuk Error Sistem Login!";
+      }
+    } else {
+      valid = false;
+      message = "Pilih Error Sistem yang valid!";
+    }
+
+    if (!valid) {
+      Swal.fire("Error", message, "error");
+      return;
+    }
+
+    // Tentukan link Google Form berdasarkan Brand
+    let googleFormLink = "";
+    const brand = document.getElementById("brand").value;
+
+    if (brand === "nb") {
+      googleFormLink =
+        "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+    } else if (brand === "mas") {
+      googleFormLink =
+        "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+    } else if (brand === "mtr") {
+      googleFormLink =
+        "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+    } else if (brand === "mbl") {
+      googleFormLink =
+        "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+    } else {
+      Swal.fire("Error", "Pilih brand yang valid!", "error");
+      return;
+    }
+
+    // Set form action
+    const form = document.getElementById("faqForm");
+    form.action = googleFormLink;
+
+    let fileUrl = "";
+
+    if (fileUpload.length > 0) {
+      const file = fileUpload[0];
+      const reader = new FileReader();
+
+      reader.onload = async function() {
+        const base64Data = reader.result.split(',')[1];
+
+        const payload = new FormData();
+        payload.append("file", base64Data);
+        payload.append("filename", file.name);
+        payload.append("mimeType", file.type);
+
+        try {
+          const response = await fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbzcnC0RGpuPfgR9mpaDrhROWLqGmQP16Z8rHt2JtRSq/dev", {
+            method: "POST",
+            body: payload
+          });
+          const result = await response.json();
+          if (result.status === "success") {
+            fileUrl = result.url;
+          } else {
+            Swal.fire("Upload Gagal", "File gagal diupload ke Google Drive", "error");
+            return;
+          }
+
+          // Setelah upload berhasil, submit form Google Form
+          const formData = new FormData(document.getElementById("faqForm"));
+          formData.append("entry.1343263162", fileUrl); // Ganti dengan entry ID yang sesuai di Google Form
+          await fetch(document.getElementById("faqForm").action, {
+            method: "POST",
+            mode: "no-cors",
+            body: formData,
+          });
+
+          Swal.fire("Berhasil!", "Formulir berhasil dikirim", "success");
+          document.getElementById("faqForm").reset();
+
+        } catch (error) {
+          console.error(error);
+          Swal.fire("Error", "Terjadi kesalahan saat mengirim formulir", "error");
+        }
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      Swal.fire("Error", "Silakan upload file terlebih dahulu!", "error");
+    }
+  });
+
+// Load region data saat halaman dimuat
+document.addEventListener("DOMContentLoaded", function () {
+  loadRegionData();
+});
+// Event listener untuk dropdown error system
+document
+  .getElementById("errorSystem")
+  .addEventListener("change", function () {
+    const errorSystem = this.value;
+    updateRequiredFields(errorSystem); // Panggil fungsi dengan parameter yang sesuai
+  });
+    </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.all.min.js"></script>
-    <script>
-      // Ambil data dari file region.json dan isi dropdown
-      // Fungsi untuk memuat dropdown Region dan Cabang
-      function loadRegionData() {
-        fetch("region.json") // Pastikan path JSON sesuai dengan lokasi file Anda
-          .then((response) => response.json())
-          .then((data) => {
-            // Dapatkan elemen select untuk region dan cabang
-            const regionSelect = document.getElementById("region");
-            const cabangSelect = document.getElementById("cabang");
-
-            // Clear existing options
-            regionSelect.innerHTML =
-              '<option value="">-- Pilih Region --</option>';
-            cabangSelect.innerHTML =
-              '<option value="">-- Pilih Cabang --</option>';
-
-            // Menambahkan option untuk region
-            const regions = [...new Set(data.map((item) => item.REGION_NAME))]; // Mengambil region yang unik
-            regions.forEach((region) => {
-              const option = document.createElement("option");
-              option.value = region;
-              option.textContent = region;
-              regionSelect.appendChild(option);
-            });
-
-            // Menambahkan event listener untuk mengubah cabang saat region dipilih
-            regionSelect.addEventListener("change", function () {
-              const selectedRegion = regionSelect.value;
-              if (selectedRegion) {
-                // Menampilkan cabang berdasarkan region yang dipilih
-                const filteredCabangs = data.filter(
-                  (item) => item.REGION_NAME === selectedRegion
-                );
-                cabangSelect.innerHTML =
-                  '<option value="">-- Pilih Cabang --</option>'; // Clear existing options
-                filteredCabangs.forEach((item) => {
-                  const option = document.createElement("option");
-                  option.value = item.COMP_OFFICE_NAME;
-                  option.textContent = item.COMP_OFFICE_NAME;
-                  cabangSelect.appendChild(option);
-                });
-              }
-            });
-          })
-          .catch((error) => {
-            console.error("Error fetching region data:", error);
-          });
-      }
-
-      // Fungsi untuk validasi dan set required fields
-      function updateRequiredFields(errorSystem) {
-        // Hapus tanda '*' dari semua label sebelum menambahkan yang baru
-        const labels = document.querySelectorAll("label");
-        labels.forEach((label) => {
-          const star = label.querySelector(".text-danger");
-          if (star) {
-            star.remove();
-          }
-        });
-
-        // Menambahkan tanda '*' sesuai dengan pilihan errorSystem
-        if (errorSystem === "ki") {
-          document.querySelector('label[for="region"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="cabang"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="brand"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="NCust"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="pic"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="NoKwn"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="issue"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-        } else if (errorSystem === "mss" || errorSystem === "wise") {
-          document.querySelector('label[for="region"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="cabang"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="NCust"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="pic"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="NoKwn"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="issue"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="IdPolo"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-        } else if (errorSystem === "login") {
-          document.querySelector('label[for="region"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="cabang"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="pic"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-          document.querySelector('label[for="issue"]').innerHTML +=
-            ' <span class="text-danger">*</span>';
-        }
-      }
-      // Event listener untuk validasi saat form disubmit
-      document
-        .getElementById("faqForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
-
-          // Ambil nilai field dari form
-          const errorSystem = document.getElementById("errorSystem").value;
-          const region = document.getElementById("region").value;
-          const cabang = document.getElementById("cabang").value;
-          const NCust = document.getElementById("NCust").value;
-          const pic = document.getElementById("pic").value;
-          const NoKwn = document.getElementById("NoKwn").value;
-          const issue = document.getElementById("issue").value;
-          const IdPolo = document.getElementById("IdPolo").value;
-          const fileUpload = document.getElementById("fileUpload").files; // Get the selected files
-
-          // Validasi berdasarkan error system
-          let valid = true;
-          let message = "";
-
-          if (errorSystem === "ki") {
-            if (!region || !cabang || !NCust || !pic || !NoKwn || !issue) {
-              valid = false;
-              message =
-                "Harap lengkapi semua field yang wajib diisi untuk Error Sistem KI!";
-            }
-          } else if (errorSystem === "mss" || errorSystem === "wise") {
-            if (
-              !region ||
-              !cabang ||
-              !NCust ||
-              !pic ||
-              !NoKwn ||
-              !issue ||
-              !IdPolo
-            ) {
-              valid = false;
-              message =
-                "Harap lengkapi semua field yang wajib diisi untuk Error Sistem MSS/WISE!";
-            }
-          } else if (errorSystem === "login") {
-            if (!region || !cabang || !pic || !issue) {
-              valid = false;
-              message =
-                "Harap lengkapi semua field yang wajib diisi untuk Error Sistem Login!";
-            }
-          } else {
-            valid = false;
-            message = "Pilih Error Sistem yang valid!";
-          }
-
-          if (!valid) {
-            Swal.fire("Error", message, "error");
-          } else {
-            // Tentukan link Google Form berdasarkan Brand
-            let googleFormLink = "";
-            const brand = document.getElementById("brand").value;
-
-            if (brand === "nb") {
-              googleFormLink =
-                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
-            } else if (brand === "mas") {
-              googleFormLink =
-                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
-            } else if (brand === "mtr") {
-              googleFormLink =
-                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
-            } else if (brand === "mbl") {
-              googleFormLink =
-                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
-            } else {
-              valid = false;
-              message = "Pilih brand yang valid!";
-            }
-
-            if (valid) {
-              const form = document.getElementById("faqForm");
-              form.action = googleFormLink;
-              form.method = "POST";
-
-              // Check if files are selected and handle them
-              if (fileUpload.length > 0) {
-                // IMPORTANT: Directly uploading files to Google Forms via a simple POST request
-                // from an external HTML form is NOT straightforward. Google Forms usually handles
-                // file uploads through its own UI and stores them in Google Drive.
-                //
-                // To truly integrate file uploads, you would typically need a backend server
-                // to handle the file upload, store it (e.g., in Google Drive via Google Drive API),
-                // and then submit the file's URL to your Google Form.
-                //
-                // For a simple client-side HTML form submitting to Google Forms,
-                // the file input will likely NOT work as expected for direct upload.
-                //
-                // As a workaround for this client-side form, you could:
-                // 1. Instruct users to upload files manually to a shared folder and paste the link.
-                // 2. Consider using a different form submission method if file upload is critical.
-                //
-                // For this example, we'll proceed with submitting the form, but be aware
-                // that the `fileUpload` field will not be directly processed by Google Forms
-                // if it's expecting a file upload through its native mechanism.
-                //
-                // If you *must* have file uploads, you'd generally need to:
-                // a. Use Google Apps Script to create a web app that receives the file,
-                //    uploads it to Drive, and then submits the form.
-                // b. Use a backend server to handle the upload and Google Drive API.
-
-                // For a basic setup, you might consider appending the file names or a placeholder
-                // if direct upload isn't feasible with your current Google Form setup.
-                // However, without a backend, the actual file data won't go to Google Forms.
-
-                // If your Google Form has a "File Upload" question, you need to find its
-                // `entry.XXXXXXXXXX` ID and typically, the form would expect a Google Drive URL
-                // in that field, not the file itself.
-
-                // For demonstration, we'll just submit the form. The `fileUpload` input
-                // has the correct `name` attribute that you would get from inspecting
-                // the Google Form's file upload question.
-              }
-
-              form.submit();
-
-              // After successful submission, generate and display a ticket number
-              // This is a client-side generated number and NOT from Google Forms itself.
-              setTimeout(function () {
-                const success = true; // Assume success after form.submit() for this example
-
-                if (success) {
-                  // Generate a simple ticket number (e.g., timestamp-based)
-                  const ticketNumber = "WOM-" + Date.now().toString().slice(-8); // Example: WOM-last 8 digits of timestamp
-
-                  Swal.fire({
-                    title: "Berhasil!",
-                    html: `Formulir berhasil dikirim.<br>Nomor Tiket Anda: <strong>${ticketNumber}</strong>`, // Added strong tag for emphasis
-                    icon: "success",
-                  }).then(() => {
-                    // Optional: Reset the form after success
-                    form.reset();
-                    // Remove validation styles
-                    form.classList.remove("was-validated");
-                    // Reload region data to reset dropdowns
-                    loadRegionData();
-                    // Clear required field indicators
-                    updateRequiredFields("");
-                  });
-                } else {
-                  Swal.fire("Gagal!", "Pengiriman formulir gagal.", "error");
-                }
-              }, 2000); // Wait for 2 seconds to simulate submission
-            }
-          }
-        });
-
-      // Load region data saat halaman dimuat
-      document.addEventListener("DOMContentLoaded", function () {
-        loadRegionData();
-      });
-      // Event listener untuk dropdown error system
-      document
-        .getElementById("errorSystem")
-        .addEventListener("change", function () {
-          const errorSystem = this.value;
-          updateRequiredFields(errorSystem); // Panggil fungsi dengan parameter yang sesuai
-        });
-    </script>
   </body>
 </html>
