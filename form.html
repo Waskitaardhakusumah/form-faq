@@ -248,7 +248,7 @@ document.getElementById("faqForm").addEventListener("submit", async function(e) 
       const base64Data = reader.result.split(",")[1]; // Ambil base64 tanpa prefix
 
       try {
-        const response = await fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbxl0-fbcQuwnm3g3cgenjaoCWDFhgsSLUsibN2BFTdUpify3awUcErBNQoZLTcOkdzl/exec", {
+        const response = await fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbw1l7Yn2kGV5dGlF1ssinNxTDIhacZM-3jPY-JDxCRqeIOxBl7dZoW9Ybe0qGZRusnFFA/exec", {
           method: "POST",
           body: new URLSearchParams({
             filedata: base64Data,
