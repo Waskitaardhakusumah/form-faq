@@ -233,80 +233,118 @@
     </div>
 
     <script>
-document.getElementById("faqForm").addEventListener("submit", async function(e) {
+document.getElementById("faqForm").addEventListener("submit", async function (e) {
   e.preventDefault();
-  var formData = new FormData(this);
 
-  const fileInput = document.getElementById("fileUpload");
-  const files = fileInput.files;
+  const errorSystem = document.getElementById("errorSystem").value;
+  const region = document.getElementById("region").value;
+  const cabang = document.getElementById("cabang").value;
+  const NCust = document.getElementById("NCust").value;
+  const pic = document.getElementById("pic").value;
+  const NoKwn = document.getElementById("NoKwn").value;
+  const issue = document.getElementById("issue").value;
+  const IdPolo = document.getElementById("IdPolo").value;
+  const fileUpload = document.getElementById("fileUpload").files;
+  const brand = document.getElementById("brand").value;
 
-  if (files.length > 0) {
-    const file = files[0];
+  let valid = true;
+  let message = "";
+
+  // Validasi
+  if (errorSystem === "ki") {
+    if (!region || !cabang || !NCust || !pic || !NoKwn || !issue) {
+      valid = false;
+      message = "Lengkapi semua field untuk Error Sistem KI!";
+    }
+  } else if (errorSystem === "mss" || errorSystem === "wise") {
+    if (!region || !cabang || !NCust || !pic || !NoKwn || !issue || !IdPolo) {
+      valid = false;
+      message = "Lengkapi semua field untuk Error Sistem MSS/WISE!";
+    }
+  } else if (errorSystem === "login") {
+    if (!region || !cabang || !pic || !issue) {
+      valid = false;
+      message = "Lengkapi semua field untuk Error Sistem Login!";
+    }
+  } else {
+    valid = false;
+    message = "Pilih Error Sistem yang valid!";
+  }
+
+  if (!brand) {
+    valid = false;
+    message = "Pilih Brand terlebih dahulu!";
+  }
+
+  if (!valid) {
+    Swal.fire("Error", message, "error");
+    return;
+  }
+
+  // Proses upload file
+  const formData = new FormData(document.getElementById("faqForm"));
+
+  if (fileUpload.length > 0) {
+    const file = fileUpload[0];
     const reader = new FileReader();
 
     reader.onload = async function () {
-      const base64Data = reader.result.split(",")[1]; // Ambil base64 tanpa prefix
-
+      const base64Data = reader.result.split(",")[1];
       try {
-        const response = await fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbzBQMddaFOzOQLIGqHlqViMmN6S2xhHJdlNQC6kd8H9d1qIN_zI9MAPxrpIQz239qAzkw/exec", {
+        const uploadRes = await fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbzBQMddaFOzOQLIGqHlqViMmN6S2xhHJdlNQC6kd8H9d1qIN_zI9MAPxrpIQz239qAzkw/exec", {
           method: "POST",
           body: new URLSearchParams({
             filedata: base64Data,
             filename: file.name,
             mimetype: file.type,
-            nama: document.getElementById("NCust").value, // Optional tambahan data
+            nama: NCust,
           }),
         });
 
-        const result = await response.json();
-
-        if (result.status === "success") {
-          formData.append("entry.1343263162", result.url); // Masukkan ke Google Form
-          submitFormData(formData);
+        const uploadJson = await uploadRes.json();
+        if (uploadJson.status === "success") {
+          formData.append("entry.1343263162", uploadJson.url);
+          submitForm(formData, brand);
         } else {
-          Swal.fire("Error", "Upload gagal: " + result.message, "error");
+          Swal.fire("Error", "Upload gagal: " + uploadJson.message, "error");
         }
       } catch (error) {
-        console.log("Upload error:", error);
-        Swal.fire("Error", "Terjadi kesalahan saat upload file", "error");
+        Swal.fire("Error", "Upload error: " + error.message, "error");
       }
     };
 
     reader.readAsDataURL(file);
   } else {
-    submitFormData(formData);
+    submitForm(formData, brand);
   }
 });
 
-function submitFormData(formData, folderUrl = "") {
-  if (folderUrl) {
-    formData.append("entry.1343263162", folderUrl); // (opsional, jika ingin field lain)
-  }
+function submitForm(formData, brand) {
+  const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse"; // Default
 
-  fetch("https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse", {
+  fetch(googleFormUrl, {
     method: "POST",
     body: formData,
-    mode: "no-cors"
+    mode: "no-cors",
   })
-  .then(() => {
-    const ticketNumber = "WOM-" + Date.now().toString().slice(-8);
-    Swal.fire({
-      title: "Berhasil!",
-      html: `Formulir berhasil dikirim.<br>Nomor Tiket Anda: <strong>${ticketNumber}</strong>`,
-      icon: "success"
-    }).then(() => {
-      document.getElementById("faqForm").reset();
-      document.getElementById("faqForm").classList.remove("was-validated");
-      loadRegionData();
-      updateRequiredFields("");
+    .then(() => {
+      const ticketNumber = "WOM-" + Date.now().toString().slice(-8);
+      Swal.fire({
+        title: "Berhasil!",
+        html: `Form berhasil dikirim.<br>Nomor Tiket: <strong>${ticketNumber}</strong>`,
+        icon: "success",
+      }).then(() => {
+        const form = document.getElementById("faqForm");
+        form.reset();
+        form.classList.remove("was-validated");
+        loadRegionData();
+        updateRequiredFields("");
+      });
+    })
+    .catch((err) => {
+      Swal.fire("Gagal", "Terjadi kesalahan saat submit form", "error");
     });
-  })
-  .catch((error) => {
-    console.log("Apps Script error:", error);
-    Swal.fire("Error", "Terjadi kesalahan saat mengirim formulir", "error");
-  });
 }
-
 </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
