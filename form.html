@@ -232,7 +232,7 @@
       </div>
     </div>
 
-    <script>
+   <script>
 document.getElementById("faqForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
@@ -250,7 +250,6 @@ document.getElementById("faqForm").addEventListener("submit", async function (e)
   let valid = true;
   let message = "";
 
-  // Validasi
   if (errorSystem === "ki") {
     if (!region || !cabang || !NCust || !pic || !NoKwn || !issue) {
       valid = false;
@@ -281,8 +280,10 @@ document.getElementById("faqForm").addEventListener("submit", async function (e)
     return;
   }
 
-  // Proses upload file
   const formData = new FormData(document.getElementById("faqForm"));
+
+  const googleFormUrl =
+    "https://docs.google.com/forms/d/e/1FAIpQLScp_iGY8XiBYYiZ9K-I6jPN3AEXpoYJM_cjMOt52OQyQyLTuQ/formResponse";
 
   if (fileUpload.length > 0) {
     const file = fileUpload[0];
@@ -301,10 +302,17 @@ document.getElementById("faqForm").addEventListener("submit", async function (e)
           }),
         });
 
-        const uploadJson = await uploadRes.json();
+        let uploadJson;
+        try {
+          uploadJson = await uploadRes.json();
+        } catch (err) {
+          Swal.fire("Error", "Gagal parsing respons upload: " + err.message, "error");
+          return;
+        }
+
         if (uploadJson.status === "success") {
           formData.append("entry.1858080700", uploadJson.url);
-          submitForm(formData, brand);
+          submitForm(formData, googleFormUrl);
         } else {
           Swal.fire("Error", "Upload gagal: " + uploadJson.message, "error");
         }
@@ -315,13 +323,11 @@ document.getElementById("faqForm").addEventListener("submit", async function (e)
 
     reader.readAsDataURL(file);
   } else {
-    submitForm(formData, brand);
+    submitForm(formData, googleFormUrl);
   }
 });
 
-function submitForm(formData, brand) {
-  const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLScp_iGY8XiBYYiZ9K-I6jPN3AEXpoYJM_cjMOt52OQyQyLTuQ/formResponse"; // Default
-
+function submitForm(formData, googleFormUrl) {
   fetch(googleFormUrl, {
     method: "POST",
     body: formData,
