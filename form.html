@@ -293,17 +293,16 @@ if (fileUpload.length > 0) {
   reader.onload = async function () {
     const base64Data = reader.result.split(",")[1];
 
-    const formDataUpload = new FormData();
-    formDataUpload.append("filedata", base64Data);
-    formDataUpload.append("filename", file.name);
-    formDataUpload.append("mimetype", file.type);
-    formDataUpload.append("nama", NCust);
-
-    try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbxAMJsrCrSR2JalkACK6ZHFunyyeSvpByx0EZ513J1McYYgGjnq6iAOwxIOpgyxvQ80_Q/exec", {
-        method: "POST",
-        body: formDataUpload,
-      });
+      const formData = new FormData();
+        formData.append("filedata", base64Data);   // hasil base64 dari file
+        formData.append("filename", file.name);    // nama file asli
+        formData.append("mimetype", file.type);    // mimetype file
+        formData.append("nama", namaCustomer);     // dari input form
+        
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxAMJsrCrSR2JalkACK6ZHFunyyeSvpByx0EZ513J1McYYgGjnq6iAOwxIOpgyxvQ80_Q/exec", {
+          method: "POST",
+          body: formData
+        });
 
       const result = await response.json();
       if (result.status === "success") {
