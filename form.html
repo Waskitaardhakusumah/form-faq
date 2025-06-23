@@ -286,19 +286,15 @@ document.getElementById("faqForm").addEventListener("submit", async function (e)
     "https://docs.google.com/forms/d/e/1FAIpQLScp_iGY8XiBYYiZ9K-I6jPN3AEXpoYJM_cjMOt52OQyQyLTuQ/formResponse";
 
   if (fileUpload.length > 0) {
-    const file = fileUpload[0];
-    const reader = new FileReader();
+   const formData = new FormData();
+formData.append("filedata", base64Data);   // hasil base64 dari file
+formData.append("filename", file.name);    // nama file asli
+formData.append("mimetype", file.type);    // mimetype file
+formData.append("nama", namaCustomer);     // dari input form
 
-    reader.onload = async function () {
-      const base64Data = reader.result.split(",")[1];
-      try {
-        const uploadRes = await fetch("https://script.google.com/macros/s/AKfycbxU5gQLPNEWL7_2AbCm-4bVX8_WVC97SbtVqs0NvjW-lLdzQ05WmKUIUUuFkFZQVeaHSg/exec", {
-          method: "POST",
-          body: new URLSearchParams({
-            filedata: base64Data,
-            filename: file.name,
-            mimetype: file.type,
-            nama: NCust,
+const response = await fetch("https://script.google.com/macros/s/AKfycbxAMJsrCrSR2JalkACK6ZHFunyyeSvpByx0EZ513J1McYYgGjnq6iAOwxIOpgyxvQ80_Q/exec", {
+  method: "POST",
+  body: formData
           }),
         });
 
