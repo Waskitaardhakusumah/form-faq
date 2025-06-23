@@ -33,7 +33,7 @@
                 <label for="brand" class="form-label small text-muted"
                   >Brand</label
                 >
-                <select id="brand" name="entry.861983899" class="form-select form-select-sm" required>
+                <select id="brand" name="entry.1837375578" class="form-select form-select-sm" required>
                   <option value="">-- Pilih Brand --</option>
                   <option value="nb">Reguler</option>
                   <option value="mas">MasKu</option>
@@ -48,7 +48,7 @@
                 >
                 <select
                   id="errorSystem"
-                  name="entry.1095040348"
+                  name="entry.1370855149"
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Error Sistem --</option>
@@ -66,7 +66,7 @@
                 >
                 <select
                   id="region"
-                  name="entry.1222026439"
+                  name="entry.822453174"
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Region --</option>
@@ -79,7 +79,7 @@
                 >
                 <select
                   id="cabang"
-                  name="entry.2107528609"
+                  name="entry.2001715435"
                   class="form-select form-select-sm"
                 >
                   <option value="">-- Pilih Cabang --</option>
@@ -95,7 +95,7 @@
                 <input
                   type="text"
                   id="NCust"
-                  name="entry.40245468"
+                  name="entry.1796950910"
                   class="form-control form-control-sm"
                 />
               </div>
@@ -106,7 +106,7 @@
                 <input
                   type="text"
                   id="IdCust"
-                  name="entry.1941291136"
+                  name="entry.2114923317"
                   class="form-control form-control-sm"
                 />
               </div>
@@ -119,7 +119,7 @@
                 <input
                   type="text"
                   id="pic"
-                  name="entry.2106221406"
+                  name="entry.2092467854"
                   class="form-control form-control-sm"
                   required
                 />
@@ -132,7 +132,7 @@
                 <input
                   type="text"
                   id="NoKwn"
-                  name="entry.912746287"
+                  name="entry.1728813439"
                   class="form-control form-control-sm"
                   required
                 />
@@ -147,7 +147,7 @@
                 <input
                   type="text"
                   id="IdPolo"
-                  name="entry.915304343"
+                  name="entry.1941591649"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">Task ID Polo harus diisi!</div>
@@ -159,7 +159,7 @@
                 <input
                   type="text"
                   id="NoApp"
-                  name="entry.1870465535"
+                  name="entry.287384974"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">No APP harus diisi!</div>
@@ -173,7 +173,7 @@
                 <input
                   type="text"
                   id="NoOdrn"
-                  name="entry.751992806"
+                  name="entry.1430473955"
                   class="form-control form-control-sm"
                 />
                 <div class="invalid-feedback">No Odrn harus diisi!</div>
@@ -185,7 +185,7 @@
                 <input
                   type="file"
                   id="fileUpload"
-                  name="entry.2005620554"
+                  name="entry.1858080700"
                   class="form-control form-control-sm"
                   accept="image/*,video/*"
                   multiple
@@ -202,7 +202,7 @@
               >
               <textarea
                 id="issue"
-                name="entry.420799577"
+                name="entry.13324874"
                 class="form-control form-control-sm"
                 rows="5"
                 required
@@ -291,7 +291,7 @@ document.getElementById("faqForm").addEventListener("submit", async function (e)
     reader.onload = async function () {
       const base64Data = reader.result.split(",")[1];
       try {
-        const uploadRes = await fetch("https://script.google.com/a/macros/wom.co.id/s/AKfycbzBQMddaFOzOQLIGqHlqViMmN6S2xhHJdlNQC6kd8H9d1qIN_zI9MAPxrpIQz239qAzkw/exec", {
+        const uploadRes = await fetch("https://script.google.com/macros/s/AKfycbxU5gQLPNEWL7_2AbCm-4bVX8_WVC97SbtVqs0NvjW-lLdzQ05WmKUIUUuFkFZQVeaHSg/exec", {
           method: "POST",
           body: new URLSearchParams({
             filedata: base64Data,
@@ -303,7 +303,7 @@ document.getElementById("faqForm").addEventListener("submit", async function (e)
 
         const uploadJson = await uploadRes.json();
         if (uploadJson.status === "success") {
-          formData.append("entry.1343263162", uploadJson.url);
+          formData.append("entry.1858080700", uploadJson.url);
           submitForm(formData, brand);
         } else {
           Swal.fire("Error", "Upload gagal: " + uploadJson.message, "error");
@@ -320,7 +320,7 @@ document.getElementById("faqForm").addEventListener("submit", async function (e)
 });
 
 function submitForm(formData, brand) {
-  const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse"; // Default
+  const googleFormUrl = https://docs.google.com/forms/d/e/1FAIpQLScp_iGY8XiBYYiZ9K-I6jPN3AEXpoYJM_cjMOt52OQyQyLTuQ/formResponse"; // Default
 
   fetch(googleFormUrl, {
     method: "POST",
@@ -516,16 +516,16 @@ function submitForm(formData, brand) {
 
             if (brand === "nb") {
               googleFormLink =
-                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+                "https://docs.google.com/forms/d/e/1FAIpQLScp_iGY8XiBYYiZ9K-I6jPN3AEXpoYJM_cjMOt52OQyQyLTuQ/formResponse";
             } else if (brand === "mas") {
               googleFormLink =
-                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+                "https://docs.google.com/forms/d/e/1FAIpQLScp_iGY8XiBYYiZ9K-I6jPN3AEXpoYJM_cjMOt52OQyQyLTuQ/formResponse";
             } else if (brand === "mtr") {
               googleFormLink =
-                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+                "https://docs.google.com/forms/d/e/1FAIpQLScp_iGY8XiBYYiZ9K-I6jPN3AEXpoYJM_cjMOt52OQyQyLTuQ/formResponse";
             } else if (brand === "mbl") {
               googleFormLink =
-                "https://docs.google.com/forms/d/e/1FAIpQLSfTsmZENU8N6ghi_BrSFDTGzD4590wTvEBMjgCAPHwFZvplLw/formResponse";
+                "https://docs.google.com/forms/d/e/1FAIpQLScp_iGY8XiBYYiZ9K-I6jPN3AEXpoYJM_cjMOt52OQyQyLTuQ/formResponse";
             } else {
               valid = false;
               message = "Pilih brand yang valid!";
